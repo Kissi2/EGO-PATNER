@@ -1,0 +1,108 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { StatCardComponent } from '../../shared/stat-card/stat-card';
+import { TableCardComponent } from '../../shared/table-card/table-card';
+import { ExportService } from '../../shared/export.service';
+
+export interface Paiement {
+  id: number;
+  datePaiement: string;
+  conducteur: string;
+  typeAbonnement: 'Journalier' | 'Hebdomadaire' | 'Mensuel';
+  montant: number;
+  gain: number;
+}
+
+@Component({
+  selector: 'lib-abonnement',
+  standalone: true,
+  imports: [CommonModule, FormsModule, StatCardComponent, TableCardComponent],
+  templateUrl: './abonnement.html',
+  styleUrls: ['./abonnement.scss'],
+})
+export class AbonnementComponent {
+
+  constructor(private exportSvc: ExportService) {}
+
+  exportToExcel(): void {
+    const rows = this.filtered.map(p => ({
+      'Date de paiement':  p.datePaiement,
+      'Conducteur':        p.conducteur,
+      'Type abonnement':   p.typeAbonnement,
+      'Montant (FCFA)':    p.montant,
+      'Gain (FCFA)':       p.gain,
+    }));
+    this.exportSvc.exportToExcel(rows, 'Abonnements', 'Abonnements');
+  }
+
+  private allPaiements: Paiement[] = [
+    { id: 1,  datePaiement: '20/02/2026', conducteur: 'Lucien Simpohi',           typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
+    { id: 2,  datePaiement: '20/02/2026', conducteur: 'KOUAMÉ INNOCENT Moto',     typeAbonnement: 'Hebdomadaire', montant: 5000,  gain: 500  },
+    { id: 3,  datePaiement: '19/02/2026', conducteur: 'Gapea Israel Gbougnon',    typeAbonnement: 'Journalier',   montant: 1000,  gain: 100  },
+    { id: 4,  datePaiement: '19/02/2026', conducteur: "N'doumi Hermann Djama",    typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
+    { id: 5,  datePaiement: '18/02/2026', conducteur: "N'guessan Nicolas Assoua", typeAbonnement: 'Hebdomadaire', montant: 5000,  gain: 500  },
+    { id: 6,  datePaiement: '18/02/2026', conducteur: 'Diallo Ibrahim',            typeAbonnement: 'Journalier',   montant: 1000,  gain: 100  },
+    { id: 7,  datePaiement: '17/02/2026', conducteur: 'Touré Adama',              typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
+    { id: 8,  datePaiement: '17/02/2026', conducteur: 'Coulibaly Drissa',         typeAbonnement: 'Hebdomadaire', montant: 5000,  gain: 500  },
+    { id: 9,  datePaiement: '16/02/2026', conducteur: 'Traoré Moussa',            typeAbonnement: 'Journalier',   montant: 1000,  gain: 100  },
+    { id: 10, datePaiement: '16/02/2026', conducteur: 'Koné Mamadou',             typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
+  ];
+
+  // ── Filtres ───────────────────────────────────────────────────────────────
+  search      = '';
+  filtre      = 'Tous';
+  filtres     = ['Tous', 'Journalier', 'Hebdomadaire', 'Mensuel'];
+  dateFiltre  = '';   // format YYYY-MM-DD (input[type=date])
+
+  // ── Pagination ────────────────────────────────────────────────────────────
+  pageSize    = 5;
+  currentPage = 1;
+  pageSizes   = [5, 10, 20];
+
+  get filtered(): Paiement[] {
+    return this.allPaiements.filter(p => {
+      const q = this.search.toLowerCase();
+      const matchSearch = !q
+        || p.conducteur.toLowerCase().includes(q)
+        || p.datePaiement.includes(q)
+        || p.typeAbonnement.toLowerCase().includes(q)
+        || p.montant.toString().includes(q);
+      const matchFiltre = this.filtre === 'Tous' || p.typeAbonnement === this.filtre;
+      // dateFiltre est en YYYY-MM-DD, datePaiement en DD/MM/YYYY
+      let matchDate = true;
+      if (this.dateFiltre) {
+        const [y, m, d] = this.dateFiltre.split('-');
+        matchDate = p.datePaiement === `${d}/${m}/${y}`;
+      }
+      return matchSearch && matchFiltre && matchDate;
+    });
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filtered.length / this.pageSize));
+  }
+
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get paginatedPaiements(): Paiement[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filtered.slice(start, start + this.pageSize);
+  }
+
+  goTo(page: number): void {
+    if (page >= 1 && page <= this.totalPages) this.currentPage = page;
+  }
+
+  onSearchChange(): void   { this.currentPage = 1; }
+  onFiltreChange(): void   { this.currentPage = 1; }
+  onDateChange(): void     { this.currentPage = 1; }
+  onPageSizeChange(): void { this.currentPage = 1; }
+
+  get totalJournalier(): number  { return this.allPaiements.filter(p => p.typeAbonnement === 'Journalier').length; }
+  get totalHebdomadaire(): number { return this.allPaiements.filter(p => p.typeAbonnement === 'Hebdomadaire').length; }
+  get totalMensuel(): number     { return this.allPaiements.filter(p => p.typeAbonnement === 'Mensuel').length; }
+  get cumulGain(): number        { return this.allPaiements.reduce((sum, p) => sum + p.gain, 0); }
+}

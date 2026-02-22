@@ -1,0 +1,33 @@
+<div class="page">
+  <!-- Welcome -->
+  <div class="page__welcome">
+    <h1 class="page__title">
+      <span class="wave">👋</span> Bienvenue sur e-Go
+    </h1>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stats-grid">
+    @for (stat of stats; track stat.label) {
+      <lib-stat-card
+        [label]="stat.label"
+        [value]="stat.value"
+        [unite]="stat.unite"
+        [icon]="stat.icon"
+        [iconBg]="stat.iconBg"
+        [iconColor]="stat.iconColor"
+      ></lib-stat-card>
+    }
+  </div>
+
+  <!-- Chart.js gains chart -->
+  <div class="chart-card">
+    <div class="chart-card__header">
+      <h3 class="chart-title">Évolution des Gains</h3>
+      <p class="chart-subtitle">Gains mensuels en FCFA</p>
+    </div>
+    <div class="chart-container">
+      <canvas #gainChart></canvas>
+    </div>
+  </div>
+</div>

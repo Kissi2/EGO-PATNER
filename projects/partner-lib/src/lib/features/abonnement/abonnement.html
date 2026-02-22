@@ -1,0 +1,149 @@
+<div class="page">
+
+  <!-- En-tête -->
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Abonnements &amp; Gains</h1>
+      <p class="page__subtitle">Consultez la liste des abonnements et vos gains</p>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stats-grid">
+    <lib-stat-card
+      label="Abonnements Journaliers"
+      [value]="totalJournalier"
+      icon="today"
+      iconBg="#fff3ef"
+      iconColor="#F05A28"
+    ></lib-stat-card>
+    <lib-stat-card
+      label="Abonnements Hebdomadaires"
+      [value]="totalHebdomadaire"
+      icon="date_range"
+      iconBg="#e8f5e9"
+      iconColor="#43A047"
+    ></lib-stat-card>
+    <lib-stat-card
+      label="Abonnements Mensuels"
+      [value]="totalMensuel"
+      icon="calendar_month"
+      iconBg="#e3f2fd"
+      iconColor="#1E88E5"
+    ></lib-stat-card>
+    <lib-stat-card
+      label="Cumul Gains"
+      [value]="cumulGain | number"
+      unite="FCFA"
+      icon="account_balance_wallet"
+      iconBg="#f3e5f5"
+      iconColor="#8E24AA"
+    ></lib-stat-card>
+  </div>
+
+  <!-- Tableau -->
+  <lib-table-card>
+
+    <div toolbar class="toolbar">
+      <div class="search-box">
+        <span class="material-icons">search</span>
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          [(ngModel)]="search"
+          (ngModelChange)="onSearchChange()"
+        />
+      </div>
+      <button class="btn-export" (click)="exportToExcel()" title="Exporter en Excel">
+        <span class="material-icons">download</span>
+        Exporter
+      </button>
+      <div class="toolbar-right">
+        <div class="date-filter">
+          <span class="material-icons date-icon">calendar_today</span>
+          <input
+            type="date"
+            [(ngModel)]="dateFiltre"
+            (ngModelChange)="onDateChange()"
+            class="date-input"
+          />
+          @if (dateFiltre) {
+            <button class="date-clear" (click)="dateFiltre=''; onDateChange()" title="Effacer">
+              <span class="material-icons">close</span>
+            </button>
+          }
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Type :</span>
+          <div class="select-wrap">
+            <select [(ngModel)]="filtre" (ngModelChange)="onFiltreChange()">
+              @for (f of filtres; track f) {
+                <option [value]="f">{{ f }}</option>
+              }
+            </select>
+            <span class="material-icons chevron">expand_more</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Date de paiement</th>
+          <th>Conducteur</th>
+          <th>Type abonnement</th>
+          <th>Montant (FCFA)</th>
+          <th style="text-align:right">Gain (FCFA)</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of paginatedPaiements; track p.id) {
+          <tr>
+            <td>{{ p.datePaiement }}</td>
+            <td class="name-cell">{{ p.conducteur }}</td>
+            <td>
+              <span class="type-badge"
+                    [class.type-badge--jour]="p.typeAbonnement === 'Journalier'"
+                    [class.type-badge--hebdo]="p.typeAbonnement === 'Hebdomadaire'"
+                    [class.type-badge--mens]="p.typeAbonnement === 'Mensuel'">
+                {{ p.typeAbonnement }}
+              </span>
+            </td>
+            <td class="montant-cell">{{ p.montant | number }}</td>
+            <td class="gain-cell">{{ p.gain | number }}</td>
+          </tr>
+        }
+        @if (paginatedPaiements.length === 0) {
+          <tr><td colspan="5" class="empty">Aucun résultat trouvé.</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <div pagination class="pagination">
+      <div class="pagination__pages">
+        <button class="pg-btn" [disabled]="currentPage === 1" (click)="goTo(currentPage - 1)">
+          <span class="material-icons">chevron_left</span>
+        </button>
+        @for (p of pageNumbers; track p) {
+          <button class="pg-btn" [class.pg-btn--active]="p === currentPage" (click)="goTo(p)">{{ p }}</button>
+        }
+        <button class="pg-btn" [disabled]="currentPage === totalPages" (click)="goTo(currentPage + 1)">
+          <span class="material-icons">chevron_right</span>
+        </button>
+      </div>
+      <div class="pagination__size">
+        <span>Afficher :</span>
+        <div class="select-wrap">
+          <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+            @for (s of pageSizes; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+          <span class="material-icons chevron">expand_more</span>
+        </div>
+      </div>
+    </div>
+
+  </lib-table-card>
+</div>

@@ -1,0 +1,295 @@
+/* ── Page ── */
+.page {
+  padding: 48px 32px 32px;
+
+  @media (max-width: 1024px) { padding: 40px 20px 24px; }
+  @media (max-width: 640px)  { padding: 28px 14px 20px; }
+
+  &__header { margin-bottom: 28px; }
+
+  &__title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 4px;
+  }
+
+  &__subtitle {
+    font-size: 13px;
+    color: #aaa;
+    margin: 0;
+  }
+}
+
+/* ── Toolbar conducteur : filtre à droite ── */
+.toolbar .filter-group {
+  margin-left: auto;
+}
+
+/* ── Photo conducteur ── */
+.driver-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f0f0f0;
+  display: block;
+}
+
+.name-cell { font-weight: 500; }
+
+/* ── Badges statut ── */
+.badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  &--actif   { background: #e8f5e9; color: #2e7d32; }
+  &--inactif { background: #fce4ec; color: #c62828; }
+}
+
+/* ── Action column alignment ── */
+table {
+  th:last-child,
+  td:last-child { text-align: right; }
+}
+
+/* ── Action buttons ── */
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-action {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+
+  .material-icons { font-size: 18px; }
+  &:hover { opacity: 0.8; }
+}
+
+.btn-view   { background: #e8f5f0; color: #00897B; }
+.btn-delete { background: #fce4ec; color: #e53935; }
+
+/* ── Drawer ── */
+@keyframes fadeIn  { from { opacity: 0; }             to { opacity: 1; } }
+@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 900;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.25s ease;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 420px;
+  max-width: 95vw;
+  height: 100vh;
+  background: #fff;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 28px 28px 48px;
+  box-shadow: -4px 0 28px rgba(0, 0, 0, 0.12);
+  animation: slideIn 0.3s ease;
+}
+
+.drawer-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f5f5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #888;
+  transition: background 0.2s;
+
+  .material-icons { font-size: 18px; }
+  &:hover { background: #ffe0d6; color: #F05A28; }
+}
+
+.drawer-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0 20px;
+}
+
+.drawer-photo-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  border: 3px solid #F05A28;
+  overflow: hidden;
+}
+
+.drawer-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.drawer-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  text-align: center;
+}
+
+.drawer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+
+  .drawer-badge-icon { font-size: 14px; }
+
+  &--actif   { background: #e8f5e9; color: #2e7d32; }
+  &--inactif { background: #fce4ec; color: #c62828; }
+}
+
+.drawer-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 16px 0 24px;
+}
+
+.drawer-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #aaa;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.drawer-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.drawer-info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.info-icon-wrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #fff3ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .material-icons { font-size: 18px; color: #F05A28; }
+}
+
+.info-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #aaa;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.info-value {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* ── Véhicules ── */
+.vehicle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vehicle-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.vehicle-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #fff3ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .material-icons { font-size: 20px; color: #F05A28; }
+}
+
+.vehicle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.vehicle-model {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.vehicle-plaque {
+  font-size: 12px;
+  font-weight: 500;
+  color: #888;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
+.vehicle-empty {
+  font-size: 13px;
+  color: #aaa;
+  text-align: center;
+  padding: 20px 0;
+  margin: 0;
+}

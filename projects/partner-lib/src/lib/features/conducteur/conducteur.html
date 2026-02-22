@@ -1,0 +1,195 @@
+<div class="page">
+
+  <!-- En-tête page -->
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Liste des Conducteurs</h1>
+      <p class="page__subtitle">Gérez et suivez tous vos conducteurs</p>
+    </div>
+  </div>
+
+  <!-- Tableau -->
+  <lib-table-card>
+
+    <div toolbar class="toolbar">
+      <div class="search-box">
+        <span class="material-icons">search</span>
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          [(ngModel)]="search"
+          (ngModelChange)="onSearchChange()"
+        />
+      </div>
+      <button class="btn-export" (click)="exportToExcel()" title="Exporter en Excel">
+        <span class="material-icons">download</span>
+        Exporter
+      </button>
+      <div class="filter-group">
+        <span class="filter-label">Statut :</span>
+        <div class="select-wrap">
+          <select [(ngModel)]="filtre" (ngModelChange)="onFiltreChange()">
+            @for (f of filtres; track f) {
+              <option [value]="f">{{ f }}</option>
+            }
+          </select>
+          <span class="material-icons chevron">expand_more</span>
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Nom Complet</th>
+          <th>Téléphone</th>
+          <th>N° Permis</th>
+          <th>Statut</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (driver of paginatedDrivers; track driver.id) {
+          <tr>
+            <td>
+              <img [src]="driver.photo" [alt]="driver.nomComplet" class="driver-photo"
+                   onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.alt) + '&background=F05A28&color=fff&size=40'" />
+            </td>
+            <td class="name-cell">{{ driver.nomComplet }}</td>
+            <td>{{ driver.telephone }}</td>
+            <td class="permis-cell">{{ driver.permis }}</td>
+            <td>
+              <span class="badge" [class.badge--actif]="driver.statut === 'Actif'"
+                                  [class.badge--inactif]="driver.statut === 'Inactif'">
+                {{ driver.statut | uppercase }}
+              </span>
+            </td>
+            <td>
+              <div class="actions">
+                <button class="btn-action btn-view" title="Voir" (click)="openDetail(driver)">
+                  <span class="material-icons">visibility</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+        @if (paginatedDrivers.length === 0) {
+          <tr><td colspan="6" class="empty">Aucun conducteur trouvé.</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <div pagination class="pagination">
+      <div class="pagination__pages">
+        <button class="pg-btn" [disabled]="currentPage === 1" (click)="goTo(currentPage - 1)">
+          <span class="material-icons">chevron_left</span>
+        </button>
+        @for (p of pageNumbers; track p) {
+          <button class="pg-btn" [class.pg-btn--active]="p === currentPage" (click)="goTo(p)">{{ p }}</button>
+        }
+        <button class="pg-btn" [disabled]="currentPage === totalPages" (click)="goTo(currentPage + 1)">
+          <span class="material-icons">chevron_right</span>
+        </button>
+      </div>
+      <div class="pagination__size">
+        <span>Afficher :</span>
+        <div class="select-wrap">
+          <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+            @for (s of pageSizes; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+          <span class="material-icons chevron">expand_more</span>
+        </div>
+      </div>
+    </div>
+
+  </lib-table-card>
+</div>
+
+<!-- ── Drawer détail conducteur ── -->
+@if (selectedDriver) {
+  <div class="drawer-backdrop" (click)="closeDetail()"></div>
+  <aside class="drawer">
+
+    <button class="drawer-close" (click)="closeDetail()">
+      <span class="material-icons">close</span>
+    </button>
+
+    <!-- Profil -->
+    <div class="drawer-profile">
+      <div class="drawer-photo-wrap">
+        <img [src]="selectedDriver.photo" [alt]="selectedDriver.nomComplet" class="drawer-photo"
+             onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.alt) + '&background=F05A28&color=fff&size=80'" />
+      </div>
+      <h2 class="drawer-name">{{ selectedDriver.nomComplet }}</h2>
+      <span class="drawer-badge"
+            [class.drawer-badge--actif]="selectedDriver.statut === 'Actif'"
+            [class.drawer-badge--inactif]="selectedDriver.statut === 'Inactif'">
+        @if (selectedDriver.statut === 'Actif') {
+          <span class="material-icons drawer-badge-icon">check_circle</span>
+        }
+        {{ selectedDriver.statut | uppercase }}
+      </span>
+    </div>
+
+    <div class="drawer-divider"></div>
+
+    <!-- Informations conducteur -->
+    <p class="drawer-section-title">Informations Conducteur</p>
+    <div class="drawer-info-grid">
+      <div class="drawer-info-item">
+        <span class="info-icon-wrap"><span class="material-icons">local_offer</span></span>
+        <div>
+          <span class="info-label">ABONNÉ</span>
+          <span class="info-value">{{ selectedDriver.abonne }}</span>
+        </div>
+      </div>
+      <div class="drawer-info-item">
+        <span class="info-icon-wrap"><span class="material-icons">phone</span></span>
+        <div>
+          <span class="info-label">TÉL.</span>
+          <span class="info-value">{{ selectedDriver.telephone }}</span>
+        </div>
+      </div>
+      <div class="drawer-info-item">
+        <span class="info-icon-wrap"><span class="material-icons">person</span></span>
+        <div>
+          <span class="info-label">GENRE</span>
+          <span class="info-value">{{ selectedDriver.genre }}</span>
+        </div>
+      </div>
+      <div class="drawer-info-item">
+        <span class="info-icon-wrap"><span class="material-icons">schedule</span></span>
+        <div>
+          <span class="info-label">CRÉÉ LE</span>
+          <span class="info-value">{{ selectedDriver.creeLe }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawer-divider"></div>
+
+    <!-- Informations véhicule -->
+    <p class="drawer-section-title">Informations Véhicule</p>
+    @if (selectedDriver.vehicules.length > 0) {
+      <div class="vehicle-list">
+        @for (v of selectedDriver.vehicules; track v.plaque) {
+          <div class="vehicle-card">
+            <div class="vehicle-icon-wrap">
+              <span class="material-icons">directions_car</span>
+            </div>
+            <div class="vehicle-info">
+              <span class="vehicle-model">{{ v.marque }} {{ v.modele }}</span>
+              <span class="vehicle-plaque">{{ v.plaque }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="vehicle-empty">Aucun véhicule enregistré.</p>
+    }
+
+  </aside>
+}

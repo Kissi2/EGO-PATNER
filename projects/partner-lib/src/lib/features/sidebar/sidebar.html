@@ -1,0 +1,46 @@
+<!-- Overlay backdrop (mobile/tablette) -->
+@if (sidebarState.isOpen()) {
+  <div class="sidebar-overlay" (click)="sidebarState.close()"></div>
+}
+
+<aside class="sidebar" [class.sidebar--open]="sidebarState.isOpen()">
+  <div class="sidebar__logo">
+    <img src="logo.png" alt="e-Go" class="logo-img" />
+    <span class="logo-text">e-Go</span>
+  </div>
+
+  <nav class="sidebar__nav">
+    @for (item of navItems; track item.route) {
+      <a [routerLink]="item.route" routerLinkActive="active" class="nav-item"
+         (click)="closeOnMobile()">
+        <span class="material-icons nav-icon">{{ item.icon }}</span>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <!-- Déconnexion -->
+  <div class="sidebar__footer">
+    <button class="logout-btn" (click)="openLogoutModal()">
+      <span class="material-icons logout-icon">logout</span>
+      <span>Déconnexion</span>
+    </button>
+  </div>
+</aside>
+
+<!-- Modal confirmation -->
+@if (showLogoutModal) {
+  <div class="logout-modal-backdrop" (click)="cancelLogout()">
+    <div class="logout-modal" (click)="$event.stopPropagation()">
+      <div class="logout-modal__icon">
+        <span class="material-icons">logout</span>
+      </div>
+      <h3 class="logout-modal__title">Déconnexion</h3>
+      <p class="logout-modal__text">Êtes-vous sûr de vouloir vous déconnecter de votre espace partenaire ?</p>
+      <div class="logout-modal__actions">
+        <button class="logout-modal__cancel" (click)="cancelLogout()">Annuler</button>
+        <button class="logout-modal__confirm" (click)="confirmLogout()">Se déconnecter</button>
+      </div>
+    </div>
+  </div>
+}

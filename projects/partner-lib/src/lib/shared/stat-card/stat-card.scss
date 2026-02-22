@@ -1,0 +1,46 @@
+.stat-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  &__body { flex: 1; }
+
+  &__label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    color: #aaa;
+    margin: 0 0 12px;
+  }
+
+  &__value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1;
+  }
+
+  &__unite {
+    font-size: 13px;
+    font-weight: 500;
+    color: #888;
+    margin-left: 6px;
+  }
+
+  &__icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .material-icons { font-size: 26px; }
+  }
+}

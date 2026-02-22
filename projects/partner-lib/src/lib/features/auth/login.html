@@ -1,0 +1,88 @@
+<div class="login-page">
+
+  <!-- Card double panneau -->
+  <div class="login-card">
+
+    <!-- Panneau gauche : cercles décoratifs -->
+    <div class="panel-left">
+      <div class="lp-circle lp-circle--1"></div>
+      <div class="lp-circle lp-circle--2"></div>
+      <div class="lp-circle lp-circle--3"></div>
+      <div class="lp-circle lp-circle--4"></div>
+      <div class="lp-circle lp-circle--5"></div>
+      <div class="lp-circle lp-circle--6"></div>
+      <div class="lp-circle lp-circle--7"></div>
+    </div>
+
+    <!-- Panneau droit : formulaire -->
+    <div class="panel-right">
+
+      <div class="panel-logo-wrap">
+        <img src="logo.png" alt="e-Go" class="panel-logo" />
+      </div>
+
+      <h2 class="form-title">Connectez-vous à votre compte</h2>
+      <p class="form-sub">Bienvenue ! Veuillez saisir vos coordonnées.</p>
+
+      <form class="login-form" (ngSubmit)="onSubmit()" autocomplete="off">
+
+        <div class="field">
+          <label class="field__label">Nom d'utilisateur</label>
+          <div class="field__input-wrap" [class.field__input-wrap--active]="email">
+            <input
+              type="text"
+              class="field__input"
+              placeholder="Entrez votre nom d'utilisateur"
+              [(ngModel)]="email"
+              name="email"
+              autocomplete="off"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Mot de Passe</label>
+          <div class="field__input-wrap" [class.field__input-wrap--active]="password">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="field__input"
+              placeholder="••••••••"
+              [(ngModel)]="password"
+              name="password"
+              autocomplete="new-password"
+              required
+            />
+            <button type="button" class="field__toggle" (click)="showPassword = !showPassword">
+              <span class="material-icons">{{ showPassword ? 'visibility' : 'visibility_off' }}</span>
+            </button>
+          </div>
+        </div>
+
+        @if (loginError) {
+          <p class="login-error">
+            <span class="material-icons">error_outline</span>
+            Identifiants incorrects. Veuillez vérifier votre nom d'utilisateur et votre mot de passe.
+          </p>
+        }
+
+        <button type="submit" class="btn-login" [class.btn-login--active]="email && password">
+          Se connecter
+        </button>
+
+      </form>
+
+      <footer class="login-footer">Copyright © e-SPHERE</footer>
+    </div>
+
+  </div>
+
+  <!-- Splash screen -->
+  @if (showSplash) {
+    <div class="splash">
+      <img src="logo.png" alt="e-Go" class="splash__logo" />
+      <p class="splash__text">Connexion réussie ! Redirection...</p>
+    </div>
+  }
+
+</div>

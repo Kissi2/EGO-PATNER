@@ -1,0 +1,155 @@
+<div class="page">
+
+  <!-- En-tête -->
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Débit Gains</h1>
+      <p class="page__subtitle">Historique de debit gain</p>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stats-grid">
+    <lib-stat-card
+      label="Gains Totaux"
+      [value]="gainsTotaux | number"
+      unite="FCFA"
+      icon="account_balance_wallet"
+      iconBg="#fff3ef"
+      iconColor="#F05A28"
+    ></lib-stat-card>
+    <lib-stat-card
+      label="Gains du Mois"
+      [value]="gainsDuMois | number"
+      unite="FCFA"
+      icon="trending_up"
+      iconBg="#e8f5e9"
+      iconColor="#43A047"
+    ></lib-stat-card>
+    <lib-stat-card
+      label="Nombre de Transactions"
+      [value]="nombreTransactions"
+      icon="receipt_long"
+      iconBg="#e3f2fd"
+      iconColor="#1E88E5"
+    ></lib-stat-card>
+  </div>
+
+  <!-- Tableau -->
+  <lib-table-card>
+
+    <div toolbar class="toolbar">
+      <div class="search-box">
+        <span class="material-icons">search</span>
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          [(ngModel)]="search"
+          (ngModelChange)="onSearchChange()"
+        />
+      </div>
+      <button class="btn-export" (click)="exportToExcel()" title="Exporter en Excel">
+        <span class="material-icons">download</span>
+        Exporter
+      </button>
+      <div class="toolbar-right">
+        <div class="date-filter">
+          <span class="material-icons date-icon">calendar_today</span>
+          <input
+            type="date"
+            [(ngModel)]="dateFiltre"
+            (ngModelChange)="onDateChange()"
+            class="date-input"
+          />
+          @if (dateFiltre) {
+            <button class="date-clear" (click)="dateFiltre=''; onDateChange()" title="Effacer">
+              <span class="material-icons">close</span>
+            </button>
+          }
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Moyen :</span>
+          <div class="select-wrap">
+            <select [(ngModel)]="moyenFiltre" (ngModelChange)="onMoyenChange()">
+              @for (m of moyens; track m) {
+                <option [value]="m">{{ m }}</option>
+              }
+            </select>
+            <span class="material-icons chevron">expand_more</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <colgroup>
+        <col style="width:20%">
+        <col style="width:20%">
+        <col style="width:23%">
+        <col style="width:15%">
+        <col style="width:22%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Référence</th>
+          <th>Montant (FCFA)</th>
+          <th>Moyen de paiement</th>
+          <th style="text-align:right">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (g of paginatedGains; track g.id) {
+          <tr>
+            <td>{{ g.date }}</td>
+            <td class="source-cell">{{ g.source }}</td>
+            <td class="montant-cell">{{ g.montant | number }}</td>
+            <td>
+              <span class="moyen-badge"
+                    [class.moyen-badge--wave]="g.moyenPaiement === 'Wave'"
+                    [class.moyen-badge--cheque]="g.moyenPaiement === 'Chèque'"
+                    [class.moyen-badge--banque]="g.moyenPaiement === 'Compte bancaire'">
+                {{ g.moyenPaiement }}
+              </span>
+            </td>
+            <td style="text-align:right">
+              <span class="statut-badge">
+                <span class="material-icons">check_circle</span>
+                {{ g.statut }}
+              </span>
+            </td>
+          </tr>
+        }
+        @if (paginatedGains.length === 0) {
+          <tr><td colspan="5" class="empty">Aucun résultat trouvé.</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <div pagination class="pagination">
+      <div class="pagination__pages">
+        <button class="pg-btn" [disabled]="currentPage === 1" (click)="goTo(currentPage - 1)">
+          <span class="material-icons">chevron_left</span>
+        </button>
+        @for (p of pageNumbers; track p) {
+          <button class="pg-btn" [class.pg-btn--active]="p === currentPage" (click)="goTo(p)">{{ p }}</button>
+        }
+        <button class="pg-btn" [disabled]="currentPage === totalPages" (click)="goTo(currentPage + 1)">
+          <span class="material-icons">chevron_right</span>
+        </button>
+      </div>
+      <div class="pagination__size">
+        <span>Afficher :</span>
+        <div class="select-wrap">
+          <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+            @for (s of pageSizes; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+          <span class="material-icons chevron">expand_more</span>
+        </div>
+      </div>
+    </div>
+
+  </lib-table-card>
+</div>
