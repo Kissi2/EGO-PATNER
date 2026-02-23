@@ -37,16 +37,16 @@ export class AbonnementComponent {
   }
 
   private allPaiements: Paiement[] = [
-    { id: 1,  datePaiement: '20/02/2026', conducteur: 'Lucien Simpohi',           typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
-    { id: 2,  datePaiement: '20/02/2026', conducteur: 'KOUAMÉ INNOCENT Moto',     typeAbonnement: 'Hebdomadaire', montant: 5000,  gain: 500  },
-    { id: 3,  datePaiement: '19/02/2026', conducteur: 'Gapea Israel Gbougnon',    typeAbonnement: 'Journalier',   montant: 1000,  gain: 100  },
-    { id: 4,  datePaiement: '19/02/2026', conducteur: "N'doumi Hermann Djama",    typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
-    { id: 5,  datePaiement: '18/02/2026', conducteur: "N'guessan Nicolas Assoua", typeAbonnement: 'Hebdomadaire', montant: 5000,  gain: 500  },
-    { id: 6,  datePaiement: '18/02/2026', conducteur: 'Diallo Ibrahim',            typeAbonnement: 'Journalier',   montant: 1000,  gain: 100  },
-    { id: 7,  datePaiement: '17/02/2026', conducteur: 'Touré Adama',              typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
-    { id: 8,  datePaiement: '17/02/2026', conducteur: 'Coulibaly Drissa',         typeAbonnement: 'Hebdomadaire', montant: 5000,  gain: 500  },
-    { id: 9,  datePaiement: '16/02/2026', conducteur: 'Traoré Moussa',            typeAbonnement: 'Journalier',   montant: 1000,  gain: 100  },
-    { id: 10, datePaiement: '16/02/2026', conducteur: 'Koné Mamadou',             typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
+    { id: 1,  datePaiement: '20/02/2026 14:32', conducteur: 'Lucien Simpohi',           typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
+    { id: 2,  datePaiement: '20/02/2026 09:15', conducteur: 'KOUAMÉ INNOCENT Moto',     typeAbonnement: 'Hebdomadaire', montant: 5000,  gain: 500  },
+    { id: 3,  datePaiement: '19/02/2026 16:45', conducteur: 'Gapea Israel Gbougnon',    typeAbonnement: 'Journalier',   montant: 1000,  gain: 100  },
+    { id: 4,  datePaiement: '19/02/2026 11:20', conducteur: "N'doumi Hermann Djama",    typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
+    { id: 5,  datePaiement: '18/02/2026 08:50', conducteur: "N'guessan Nicolas Assoua", typeAbonnement: 'Hebdomadaire', montant: 5000,  gain: 500  },
+    { id: 6,  datePaiement: '18/02/2026 13:05', conducteur: 'Diallo Ibrahim',            typeAbonnement: 'Journalier',   montant: 1000,  gain: 100  },
+    { id: 7,  datePaiement: '17/02/2026 10:30', conducteur: 'Touré Adama',              typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
+    { id: 8,  datePaiement: '17/02/2026 15:55', conducteur: 'Coulibaly Drissa',         typeAbonnement: 'Hebdomadaire', montant: 5000,  gain: 500  },
+    { id: 9,  datePaiement: '16/02/2026 07:40', conducteur: 'Traoré Moussa',            typeAbonnement: 'Journalier',   montant: 1000,  gain: 100  },
+    { id: 10, datePaiement: '16/02/2026 12:10', conducteur: 'Koné Mamadou',             typeAbonnement: 'Mensuel',      montant: 15000, gain: 1500 },
   ];
 
   // ── Filtres ───────────────────────────────────────────────────────────────

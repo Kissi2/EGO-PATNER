@@ -14,11 +14,11 @@ export class LoginComponent {
   email        = '';
   password     = '';
   showPassword = false;
-  showSplash   = false;
+  showSplash   = false; 
   loginError   = false;
 
-  private readonly VALID_USERNAME = 'Ruth-Eunice';
-  private readonly VALID_PASSWORD = '12345678';
+  private readonly VALID_USERNAME = 'eunice';
+  private readonly VALID_PASSWORD = '123456';
 
   constructor(private router: Router) {}
 

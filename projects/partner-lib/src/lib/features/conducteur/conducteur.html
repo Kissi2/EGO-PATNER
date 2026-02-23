@@ -21,10 +21,6 @@
           (ngModelChange)="onSearchChange()"
         />
       </div>
-      <button class="btn-export" (click)="exportToExcel()" title="Exporter en Excel">
-        <span class="material-icons">download</span>
-        Exporter
-      </button>
       <div class="filter-group">
         <span class="filter-label">Statut :</span>
         <div class="select-wrap">
@@ -36,6 +32,10 @@
           <span class="material-icons chevron">expand_more</span>
         </div>
       </div>
+      <button class="btn-export" (click)="exportToExcel()" title="Exporter en Excel">
+        <span class="material-icons">upload</span>
+        Exporter
+      </button>
     </div>
 
     <table>

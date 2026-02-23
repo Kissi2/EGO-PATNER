@@ -37,18 +37,18 @@ export class GainComponent {
   }
 
   private allGains: Gain[] = [
-    { id: 1,  date: '20/02/2026', source: 'TXN-2026-00147', montant: 1500, moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 2,  date: '20/02/2026', source: 'TXN-2026-00146', montant: 500,  moyenPaiement: 'Chèque',          statut: 'Payé' },
-    { id: 3,  date: '19/02/2026', source: 'TXN-2026-00143', montant: 100,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
-    { id: 4,  date: '19/02/2026', source: 'TXN-2026-00141', montant: 1500, moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 5,  date: '18/02/2026', source: 'TXN-2026-00138', montant: 500,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
-    { id: 6,  date: '18/02/2026', source: 'TXN-2026-00135', montant: 100,  moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 7,  date: '17/02/2026', source: 'TXN-2026-00129', montant: 1500, moyenPaiement: 'Chèque',          statut: 'Payé' },
-    { id: 8,  date: '17/02/2026', source: 'TXN-2026-00126', montant: 500,  moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 9,  date: '16/02/2026', source: 'TXN-2026-00122', montant: 100,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
-    { id: 10, date: '16/02/2026', source: 'TXN-2026-00118', montant: 1500, moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 11, date: '15/02/2026', source: 'TXN-2026-00114', montant: 500,  moyenPaiement: 'Chèque',          statut: 'Payé' },
-    { id: 12, date: '15/02/2026', source: 'TXN-2026-00110', montant: 100,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
+    { id: 1,  date: '20/02/2026 14:32', source: 'TXN-2026-00147', montant: 1500, moyenPaiement: 'Wave',            statut: 'Payé' },
+    { id: 2,  date: '20/02/2026 09:15', source: 'TXN-2026-00146', montant: 500,  moyenPaiement: 'Chèque',          statut: 'Payé' },
+    { id: 3,  date: '19/02/2026 16:45', source: 'TXN-2026-00143', montant: 100,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
+    { id: 4,  date: '19/02/2026 11:20', source: 'TXN-2026-00141', montant: 1500, moyenPaiement: 'Wave',            statut: 'Payé' },
+    { id: 5,  date: '18/02/2026 08:50', source: 'TXN-2026-00138', montant: 500,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
+    { id: 6,  date: '18/02/2026 13:05', source: 'TXN-2026-00135', montant: 100,  moyenPaiement: 'Wave',            statut: 'Payé' },
+    { id: 7,  date: '17/02/2026 10:30', source: 'TXN-2026-00129', montant: 1500, moyenPaiement: 'Chèque',          statut: 'Payé' },
+    { id: 8,  date: '17/02/2026 15:55', source: 'TXN-2026-00126', montant: 500,  moyenPaiement: 'Wave',            statut: 'Payé' },
+    { id: 9,  date: '16/02/2026 07:40', source: 'TXN-2026-00122', montant: 100,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
+    { id: 10, date: '16/02/2026 12:10', source: 'TXN-2026-00118', montant: 1500, moyenPaiement: 'Wave',            statut: 'Payé' },
+    { id: 11, date: '15/02/2026 09:25', source: 'TXN-2026-00114', montant: 500,  moyenPaiement: 'Chèque',          statut: 'Payé' },
+    { id: 12, date: '15/02/2026 17:00', source: 'TXN-2026-00110', montant: 100,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
   ];
 
   // ── Filtres ───────────────────────────────────────────────────────────────

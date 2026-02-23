@@ -48,13 +48,8 @@
           (ngModelChange)="onSearchChange()"
         />
       </div>
-      <button class="btn-export" (click)="exportToExcel()" title="Exporter en Excel">
-        <span class="material-icons">download</span>
-        Exporter
-      </button>
       <div class="toolbar-right">
         <div class="date-filter">
-          <span class="material-icons date-icon">calendar_today</span>
           <input
             type="date"
             [(ngModel)]="dateFiltre"
@@ -79,6 +74,10 @@
           </div>
         </div>
       </div>
+      <button class="btn-export" (click)="exportToExcel()" title="Exporter en Excel">
+        <span class="material-icons">upload</span>
+        Exporter
+      </button>
     </div>
 
     <table>
