@@ -4,7 +4,14 @@
   @media (max-width: 1024px) { padding: 16px 20px 24px; }
   @media (max-width: 640px)  { padding: 14px 14px 20px; }
 
-  &__welcome { margin-bottom: 28px; }
+  &__welcome {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f5f6fa;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+  }
 
   &__title {
     font-size: 24px;
@@ -19,14 +26,6 @@
 
 .wave {
   display: inline-block;
-  animation: wave 1.5s infinite;
-  transform-origin: 70% 70%;
-}
-
-@keyframes wave {
-  0%, 100% { transform: rotate(0deg); }
-  25%       { transform: rotate(20deg); }
-  75%       { transform: rotate(-10deg); }
 }
 
 /* ── Cards ── */
@@ -68,10 +67,10 @@
 .chart-container {
   padding: 20px 24px 28px;
   position: relative;
-  height: 340px;   /* hauteur fixe — Chart.js lit cette valeur */
+  height: 240px;   /* hauteur fixe — Chart.js lit cette valeur */
 
   @media (max-width: 640px) {
-    height: 220px;
+    height: 160px;
     padding: 16px 12px 20px;
   }
 

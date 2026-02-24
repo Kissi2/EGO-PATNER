@@ -5,7 +5,14 @@
   @media (max-width: 1024px) { padding: 16px 20px 24px; }
   @media (max-width: 640px)  { padding: 14px 14px 20px; }
 
-  &__header { margin-bottom: 28px; }
+  &__header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f5f6fa;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+  }
 
   &__title {
     font-size: 26px;
