@@ -15,12 +15,22 @@ export class SidebarComponent {
 
   showLogoutModal = false;
 
+  admin = {
+    name: 'Ruth-Eunice',
+    role: 'Partenaire',
+  };
+
   navItems = [
     { label: 'Tableau de Bord',      icon: 'dashboard',              route: '/dashboard' },
     { label: 'Conducteurs',           icon: 'drive_eta',              route: '/conducteur' },
     { label: 'Abonnements et gains',  icon: 'card_membership',        route: '/abonnement' },
     { label: 'Débit gains',           icon: 'account_balance_wallet', route: '/gain' },
   ];
+
+  goToProfile(): void {
+    this.sidebarState.close();
+    this.router.navigate(['/profil']);
+  }
 
   closeOnMobile(): void {
     this.sidebarState.close();

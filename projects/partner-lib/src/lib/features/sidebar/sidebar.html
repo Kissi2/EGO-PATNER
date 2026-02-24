@@ -19,6 +19,17 @@
     }
   </nav>
 
+  <!-- Profil -->
+  <div class="sidebar__profile" (click)="goToProfile()">
+    <div class="profile-avatar">
+      <span class="material-icons">person</span>
+    </div>
+    <div class="profile-info">
+      <span class="profile-name">{{ admin.name }}</span>
+      <span class="profile-role">{{ admin.role }}</span>
+    </div>
+  </div>
+
   <!-- Déconnexion -->
   <div class="sidebar__footer">
     <button class="logout-btn" (click)="openLogoutModal()">
