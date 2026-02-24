@@ -5,10 +5,12 @@ import { AbonnementComponent } from '../../projects/partner-lib/src/lib/features
 import { GainComponent } from '../../projects/partner-lib/src/lib/features/gain/gain';
 import { LoginComponent } from '../../projects/partner-lib/src/lib/features/auth/login';
 import { ProfileComponent } from '../../projects/partner-lib/src/lib/features/profile/profile';
+import { RedirectComponent } from '../../projects/partner-lib/src/lib/features/auth/redirect';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'redirect', component: RedirectComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'conducteur', component: ConducteurComponent },
   { path: 'abonnement', component: AbonnementComponent },

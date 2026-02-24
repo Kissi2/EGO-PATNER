@@ -1,0 +1,59 @@
+<div class="drp-wrap">
+
+  <!-- Bouton déclencheur -->
+  <button class="drp-btn" [class.drp-btn--active]="dateDebut || dateFin" (click)="toggleOpen()">
+    <span class="material-icons drp-icon">calendar_month</span>
+    <span class="drp-label">{{ buttonLabel }}</span>
+    @if (dateDebut || dateFin) {
+      <span class="material-icons drp-clear-icon" (click)="clear($event)">close</span>
+    }
+  </button>
+
+  <!-- Panneau calendrier -->
+  @if (open) {
+    <div class="drp-panel">
+
+      <div class="drp-panel__header">Sélectionnez une période</div>
+
+      <!-- Navigation mois -->
+      <div class="drp-nav">
+        <button class="drp-nav__btn" (click)="prevMonth()">
+          <span class="material-icons">chevron_left</span>
+        </button>
+        <span class="drp-nav__title">{{ panelTitle }}</span>
+        <button class="drp-nav__btn" (click)="nextMonth()">
+          <span class="material-icons">chevron_right</span>
+        </button>
+      </div>
+
+      <!-- Grille -->
+      <div class="drp-grid">
+
+        <!-- En-têtes jours -->
+        @for (h of HEADERS; track h) {
+          <div class="drp-grid__header">{{ h }}</div>
+        }
+
+        <!-- Jours -->
+        @for (day of calendarDays; track $index) {
+          @if (day) {
+            <div
+              class="drp-grid__day"
+              [class.is-start]="isStart(day)"
+              [class.is-end]="isEnd(day)"
+              [class.is-range]="isInRange(day)"
+              [class.is-today]="isToday(day)"
+              (click)="selectDay(day)"
+              (mouseenter)="onHover(day)"
+              (mouseleave)="onHover(null)"
+            >{{ day.getDate() }}</div>
+          } @else {
+            <div class="drp-grid__day drp-grid__day--empty"></div>
+          }
+        }
+
+      </div>
+    </div>
+  }
+
+</div>

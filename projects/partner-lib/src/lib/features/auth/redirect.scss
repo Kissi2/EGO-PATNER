@@ -1,0 +1,36 @@
+@keyframes rd-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes rd-drive {
+  from { transform: translateX(0); }
+  to   { transform: translateX(220px); }
+}
+
+@keyframes rd-wheel {
+  to { transform: rotate(360deg); }
+}
+
+.redirect {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: rd-in 0.2s ease;
+
+  &__car {
+    width: 168px;
+    height: auto;
+    display: block;
+    animation: rd-drive 3.6s 0.15s linear both;
+  }
+}
+
+.redirect__wheel {
+  animation: rd-wheel 1.1s 0.15s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}

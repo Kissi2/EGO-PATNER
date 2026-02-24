@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { StatCardComponent } from '../../shared/stat-card/stat-card';
 import { TableCardComponent } from '../../shared/table-card/table-card';
 import { ExportService } from '../../shared/export.service';
+import { DateRangePickerComponent, DateRange } from '../../shared/date-range-picker/date-range-picker';
 
 export interface Paiement {
   id: number;
@@ -17,7 +18,7 @@ export interface Paiement {
 @Component({
   selector: 'lib-abonnement',
   standalone: true,
-  imports: [CommonModule, FormsModule, StatCardComponent, TableCardComponent],
+  imports: [CommonModule, FormsModule, StatCardComponent, TableCardComponent, DateRangePickerComponent],
   templateUrl: './abonnement.html',
   styleUrls: ['./abonnement.scss'],
 })
@@ -53,12 +54,19 @@ export class AbonnementComponent {
   search      = '';
   filtre      = 'Tous';
   filtres     = ['Tous', 'Journalier', 'Hebdomadaire', 'Mensuel'];
-  dateFiltre  = '';   // format YYYY-MM-DD (input[type=date])
+  dateDebut   = '';   // format YYYY-MM-DD
+  dateFin     = '';   // format YYYY-MM-DD
 
   // ── Pagination ────────────────────────────────────────────────────────────
   pageSize    = 5;
   currentPage = 1;
   pageSizes   = [5, 10, 20];
+
+  /** Parse 'DD/MM/YYYY HH:mm' → Date */
+  private toDate(str: string): Date {
+    const [d, m, y] = str.split(' ')[0].split('/');
+    return new Date(Number(y), Number(m) - 1, Number(d));
+  }
 
   get filtered(): Paiement[] {
     return this.allPaiements.filter(p => {
@@ -68,13 +76,20 @@ export class AbonnementComponent {
         || p.datePaiement.includes(q)
         || p.typeAbonnement.toLowerCase().includes(q)
         || p.montant.toString().includes(q);
+
       const matchFiltre = this.filtre === 'Tous' || p.typeAbonnement === this.filtre;
-      // dateFiltre est en YYYY-MM-DD, datePaiement en DD/MM/YYYY
+
+      const pDate = this.toDate(p.datePaiement);
       let matchDate = true;
-      if (this.dateFiltre) {
-        const [y, m, d] = this.dateFiltre.split('-');
-        matchDate = p.datePaiement === `${d}/${m}/${y}`;
+      if (this.dateDebut) {
+        const [y, m, d] = this.dateDebut.split('-');
+        matchDate = pDate >= new Date(Number(y), Number(m) - 1, Number(d));
       }
+      if (matchDate && this.dateFin) {
+        const [y, m, d] = this.dateFin.split('-');
+        matchDate = pDate <= new Date(Number(y), Number(m) - 1, Number(d));
+      }
+
       return matchSearch && matchFiltre && matchDate;
     });
   }
@@ -96,10 +111,20 @@ export class AbonnementComponent {
     if (page >= 1 && page <= this.totalPages) this.currentPage = page;
   }
 
+  onRangeChange(r: DateRange): void {
+    this.dateDebut = r.debut;
+    this.dateFin   = r.fin;
+    this.currentPage = 1;
+  }
+
   onSearchChange(): void   { this.currentPage = 1; }
   onFiltreChange(): void   { this.currentPage = 1; }
-  onDateChange(): void     { this.currentPage = 1; }
   onPageSizeChange(): void { this.currentPage = 1; }
+  clearDates(): void {
+    this.dateDebut   = '';
+    this.dateFin     = '';
+    this.currentPage = 1;
+  }
 
   get totalJournalier(): number  { return this.allPaiements.filter(p => p.typeAbonnement === 'Journalier').length; }
   get totalHebdomadaire(): number { return this.allPaiements.filter(p => p.typeAbonnement === 'Hebdomadaire').length; }

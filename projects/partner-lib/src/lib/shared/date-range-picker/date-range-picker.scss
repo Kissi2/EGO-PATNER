@@ -1,0 +1,156 @@
+/* ── Wrapper ── */
+.drp-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+/* ── Bouton ── */
+.drp-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 9px 14px;
+  background: #f5f6fa;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+  transition: border-color 0.2s, background 0.2s;
+
+  &:hover   { border-color: #F05A28; background: #fff; }
+  &--active { border-color: #F05A28; color: #F05A28; background: #fff3ef; }
+
+  .drp-icon      { font-size: 17px; color: #aaa; }
+  .drp-clear-icon {
+    font-size: 16px;
+    color: #bbb;
+    transition: color 0.15s;
+    &:hover { color: #e53935; }
+  }
+}
+
+/* ── Panneau ── */
+.drp-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 248px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.14);
+  z-index: 400;
+  overflow: hidden;
+  animation: drp-in 0.15s ease;
+
+  &__header {
+    padding: 12px 16px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a1a1a;
+    border-bottom: 1px solid #f0f0f0;
+  }
+}
+
+@keyframes drp-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Navigation mois ── */
+.drp-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 4px;
+
+  &__title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  &__btn {
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 50%;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    .material-icons { font-size: 17px; color: #555; }
+    &:hover { background: #ebebeb; }
+  }
+}
+
+/* ── Grille ── */
+.drp-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 4px 8px 10px;
+  gap: 1px;
+
+  &__header {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #bbb;
+    padding: 3px 0 6px;
+    text-transform: uppercase;
+  }
+
+  &__day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    user-select: none;
+
+    &:hover:not(&--empty) { background: #fff3ef; color: #F05A28; }
+
+    &--empty { cursor: default; pointer-events: none; }
+
+    /* Aujourd'hui */
+    &.is-today { color: #F05A28; font-weight: 700; }
+
+    /* Dans l'intervalle */
+    &.is-range {
+      background: #fff3ef;
+      color: #F05A28;
+      border-radius: 0;
+    }
+
+    /* Début de l'intervalle */
+    &.is-start {
+      background: #F05A28;
+      color: #fff;
+      font-weight: 700;
+      border-radius: 6px 0 0 6px;
+    }
+
+    /* Fin de l'intervalle */
+    &.is-end {
+      background: #F05A28;
+      color: #fff;
+      font-weight: 700;
+      border-radius: 0 6px 6px 0;
+    }
+
+    /* Même jour début et fin */
+    &.is-start.is-end {
+      border-radius: 6px;
+    }
+  }
+}

@@ -1,7 +1,8 @@
 .stat-card {
   background: #fff;
   border-radius: 10px;
-  padding: 24px;
+  padding: 20px 24px;
+  height: 110px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14,11 +15,11 @@
     font-weight: 600;
     letter-spacing: 0.8px;
     color: #aaa;
-    margin: 0 0 12px;
+    margin: 0 0 8px;
   }
 
   &__value {
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 700;
     color: #1a1a1a;
     margin: 0;
@@ -33,14 +34,14 @@
   }
 
   &__icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 
-    .material-icons { font-size: 26px; }
+    .material-icons { font-size: 20px; }
   }
 }

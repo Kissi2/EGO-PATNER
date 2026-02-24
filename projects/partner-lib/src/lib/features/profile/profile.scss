@@ -1,9 +1,9 @@
 /* ── Page ── */
 .page {
-  padding: 48px 32px 32px;
+  padding: 20px 32px 32px;
 
-  @media (max-width: 1024px) { padding: 40px 20px 24px; }
-  @media (max-width: 640px)  { padding: 28px 14px 20px; }
+  @media (max-width: 1024px) { padding: 16px 20px 24px; }
+  @media (max-width: 640px)  { padding: 14px 14px 20px; }
 
   &__header { margin-bottom: 28px; }
 
@@ -21,40 +21,66 @@
   }
 }
 
-/* ── Wrap ── */
-.profile-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* ── Card de base ── */
+/* ── Card unique ── */
 .profile-card {
   width: 100%;
   background: #fff;
   border-radius: 14px;
   border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-/* ── Card 1 : identité ── */
-.profile-card--identity {
+/* ── Rangée gauche + droite ── */
+.profile-card__main {
+  display: flex;
+  align-items: stretch;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+/* ── Pied de card : bouton centré ── */
+.profile-card__footer {
+  border-top: 1px solid #f0f0f0;
+  padding: 18px 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ── Gauche : avatar + nom + rôle ── */
+.profile-left {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  padding: 36px 32px;
+  gap: 10px;
+  padding: 36px 40px;
+  min-width: 220px;
   text-align: center;
 
-  @media (max-width: 640px) {
-    padding: 28px 18px;
-    gap: 12px;
-  }
-}
+  @media (max-width: 1024px) { padding: 28px 28px; min-width: 180px; }
+  @media (max-width: 768px)  { padding: 28px 20px; border-bottom: 1px solid #f0f0f0; }
 
-.profile-avatar-wrap {
-  flex-shrink: 0;
+  &__name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+  }
+
+  &__role {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: #555;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 
 .profile-avatar {
@@ -67,65 +93,49 @@
   justify-content: center;
 
   .material-icons { font-size: 38px; color: #777; }
-
-  @media (max-width: 640px) {
-    width: 56px;
-    height: 56px;
-    .material-icons { font-size: 30px; }
-  }
 }
 
-.profile-identity {
+/* ── Point de statut ── */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #43A047;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.2);
+  flex-shrink: 0;
+}
+
+/* ── Séparateur vertical ── */
+.profile-sep {
+  width: 1px;
+  background: #f0f0f0;
+  align-self: stretch;
+
+  @media (max-width: 768px) { display: none; }
+}
+
+/* ── Droite : champs ── */
+.profile-right {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  padding: 32px 36px;
+  gap: 24px;
 
-  &__name {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0;
-
-    @media (max-width: 640px) { font-size: 17px; }
-  }
-
-  &__role {
-    font-size: 13px;
-    color: #888;
-  }
+  @media (max-width: 768px) { padding: 24px 20px; }
 }
 
-/* ── Card 2 : infos personnelles ── */
-.profile-card--info {
-  padding: 28px 32px 24px;
-
-  @media (max-width: 640px) { padding: 20px 18px 18px; }
-}
-
-.profile-card__info-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 28px;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.profile-card__info-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-/* ── Grille de champs ── */
+/* ── Grille 2×2 ── */
 .profile-fields {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px 32px;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 48px;
 
-  @media (max-width: 900px)  { grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: 540px)  { grid-template-columns: 1fr; gap: 16px; }
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 .profile-field {
@@ -137,7 +147,7 @@
     font-size: 11px;
     font-weight: 600;
     color: #aaa;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
   }
 
@@ -146,25 +156,6 @@
     font-weight: 600;
     color: #1a1a1a;
   }
-}
-
-/* ── Statut dans les champs ── */
-.profile-status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #2e7d32;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  background: #43A047;
-  border-radius: 50%;
-  box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.2);
-  flex-shrink: 0;
 }
 
 /* ── Bouton Modifier ── */
@@ -215,6 +206,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 1;
 }
 
 .form-row {
@@ -269,6 +261,7 @@
   gap: 12px;
   padding-top: 8px;
   flex-wrap: wrap;
+  margin-top: auto;
 }
 
 .btn-cancel {

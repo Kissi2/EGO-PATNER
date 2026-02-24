@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { StatCardComponent } from '../../shared/stat-card/stat-card';
 import { TableCardComponent } from '../../shared/table-card/table-card';
 import { ExportService } from '../../shared/export.service';
+import { DateRangePickerComponent, DateRange } from '../../shared/date-range-picker/date-range-picker';
 
 export interface Gain {
   id: number;
@@ -17,7 +18,7 @@ export interface Gain {
 @Component({
   selector: 'lib-gain',
   standalone: true,
-  imports: [CommonModule, FormsModule, StatCardComponent, TableCardComponent],
+  imports: [CommonModule, FormsModule, StatCardComponent, TableCardComponent, DateRangePickerComponent],
   templateUrl: './gain.html',
   styleUrls: ['./gain.scss'],
 })
@@ -53,7 +54,8 @@ export class GainComponent {
 
   // ── Filtres ───────────────────────────────────────────────────────────────
   search      = '';
-  dateFiltre  = '';
+  dateDebut   = '';   // format YYYY-MM-DD
+  dateFin     = '';   // format YYYY-MM-DD
   moyenFiltre = 'Tous';
   moyens      = ['Tous', 'Wave', 'Chèque', 'Compte bancaire'];
 
@@ -61,6 +63,12 @@ export class GainComponent {
   pageSize    = 5;
   currentPage = 1;
   pageSizes   = [5, 10, 20];
+
+  /** Parse 'DD/MM/YYYY HH:mm' → Date */
+  private toDate(str: string): Date {
+    const [d, m, y] = str.split(' ')[0].split('/');
+    return new Date(Number(y), Number(m) - 1, Number(d));
+  }
 
   get filtered(): Gain[] {
     return this.allGains.filter(g => {
@@ -70,12 +78,20 @@ export class GainComponent {
         || g.montant.toString().includes(q)
         || g.date.includes(q)
         || g.moyenPaiement.toLowerCase().includes(q);
-      const matchMoyen  = this.moyenFiltre === 'Tous' || g.moyenPaiement === this.moyenFiltre;
+
+      const matchMoyen = this.moyenFiltre === 'Tous' || g.moyenPaiement === this.moyenFiltre;
+
+      const gDate = this.toDate(g.date);
       let matchDate = true;
-      if (this.dateFiltre) {
-        const [y, m, d] = this.dateFiltre.split('-');
-        matchDate = g.date === `${d}/${m}/${y}`;
+      if (this.dateDebut) {
+        const [y, m, d] = this.dateDebut.split('-');
+        matchDate = gDate >= new Date(Number(y), Number(m) - 1, Number(d));
       }
+      if (matchDate && this.dateFin) {
+        const [y, m, d] = this.dateFin.split('-');
+        matchDate = gDate <= new Date(Number(y), Number(m) - 1, Number(d));
+      }
+
       return matchSearch && matchMoyen && matchDate;
     });
   }
@@ -112,8 +128,13 @@ export class GainComponent {
     if (page >= 1 && page <= this.totalPages) this.currentPage = page;
   }
 
+  onRangeChange(r: DateRange): void {
+    this.dateDebut = r.debut;
+    this.dateFin   = r.fin;
+    this.currentPage = 1;
+  }
+
   onSearchChange(): void   { this.currentPage = 1; }
-  onDateChange(): void     { this.currentPage = 1; }
   onMoyenChange(): void    { this.currentPage = 1; }
   onPageSizeChange(): void { this.currentPage = 1; }
 }

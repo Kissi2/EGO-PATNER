@@ -55,19 +55,11 @@
         />
       </div>
       <div class="toolbar-right">
-        <div class="date-filter">
-          <input
-            type="date"
-            [(ngModel)]="dateFiltre"
-            (ngModelChange)="onDateChange()"
-            class="date-input"
-          />
-          @if (dateFiltre) {
-            <button class="date-clear" (click)="dateFiltre=''; onDateChange()" title="Effacer">
-              <span class="material-icons">close</span>
-            </button>
-          }
-        </div>
+        <lib-date-range-picker
+          [dateDebut]="dateDebut"
+          [dateFin]="dateFin"
+          (rangeChange)="onRangeChange($event)"
+        ></lib-date-range-picker>
         <div class="filter-group">
           <span class="filter-label">Type :</span>
           <div class="select-wrap">

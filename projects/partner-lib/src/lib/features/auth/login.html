@@ -66,7 +66,7 @@
           </p>
         }
 
-        <button type="submit" class="btn-login" [class.btn-login--active]="email && password">
+        <button type="submit" class="btn-login" [class.btn-login--active]="email && password.length >= 4">
           Se connecter
         </button>
 
@@ -77,12 +77,5 @@
 
   </div>
 
-  <!-- Splash screen -->
-  @if (showSplash) {
-    <div class="splash">
-      <img src="logo.png" alt="e-Go" class="splash__logo" />
-      <p class="splash__text">Connexion réussie ! Redirection...</p>
-    </div>
-  }
 
 </div>

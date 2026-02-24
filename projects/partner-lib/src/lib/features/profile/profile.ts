@@ -11,7 +11,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class ProfileComponent {
   admin = {
-    name: 'Ruth-Eunice',
+    firstName: 'Ruth',
+    lastName: 'Eunice',
     role: 'Administrateur Partenaire',
     email: 'ruth.eunice@e-sphere.com',
     phone: '+225 07 12 34 56 78',
@@ -23,6 +24,10 @@ export class ProfileComponent {
   isEditing = false;
   draft = { ...this.admin };
   saveSuccess = false;
+
+  get fullName(): string {
+    return `${this.admin.firstName}-${this.admin.lastName}`;
+  }
 
   startEdit(): void {
     this.draft = { ...this.admin };

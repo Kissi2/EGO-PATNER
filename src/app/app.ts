@@ -19,7 +19,8 @@ export class App {
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
-        this.isLoginPage = e.urlAfterRedirects.startsWith('/login');
+        this.isLoginPage = e.urlAfterRedirects.startsWith('/login')
+                        || e.urlAfterRedirects.startsWith('/redirect');
       });
   }
 }

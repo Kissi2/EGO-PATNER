@@ -23,4 +23,6 @@
   background: #f5f6fa;
   height: calc(100vh - 72px);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
