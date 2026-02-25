@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { switchMap } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'lib-login',
@@ -15,19 +17,30 @@ export class LoginComponent implements OnInit {
   password     = '';
   showPassword = false;
   loginError   = false;
+  isLoading    = false;
 
-  private readonly VALID_USERNAME = 'eunice';
-  private readonly VALID_PASSWORD = '123456';
-
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Lu depuis l'état de navigation si renvoyé depuis /redirect
     this.loginError = (history.state as { loginError?: boolean })?.loginError === true;
   }
 
   onSubmit(): void {
-    const success = this.email === this.VALID_USERNAME && this.password === this.VALID_PASSWORD;
-    this.router.navigate(['/redirect'], { state: { success } });
+    if (this.isLoading) return;
+    this.loginError = false;
+    this.isLoading  = true;
+
+    this.authService
+      .login(this.email, this.password)
+      .pipe(switchMap(() => this.authService.getMe()))
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/redirect'], { state: { success: true } });
+        },
+        error: () => {
+          this.isLoading  = false;
+          this.loginError = true;
+        },
+      });
   }
 }

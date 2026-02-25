@@ -11,7 +11,7 @@
     @for (stat of stats; track stat.label) {
       <lib-stat-card
         [label]="stat.label"
-        [value]="stat.value"
+        [value]="statsLoading ? null : stat.value"
         [unite]="stat.unite"
         [icon]="stat.icon"
         [iconBg]="stat.iconBg"
@@ -27,7 +27,18 @@
       <p class="chart-subtitle">Gains mensuels en FCFA</p>
     </div>
     <div class="chart-container">
-      <canvas #gainChart></canvas>
+      @if (chartLoading) {
+        <div class="chart-state">
+          <span class="material-icons chart-state__spinner">sync</span>
+        </div>
+      } @else if (chartError) {
+        <div class="chart-state chart-state--error">
+          <span class="material-icons">error_outline</span>
+          <span>Impossible de charger les données</span>
+        </div>
+      } @else {
+        <canvas #gainChart></canvas>
+      }
     </div>
   </div>
 </div>

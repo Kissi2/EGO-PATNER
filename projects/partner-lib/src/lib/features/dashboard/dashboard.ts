@@ -1,6 +1,7 @@
-import { Component, OnDestroy, AfterViewInit, ElementRef, ViewChild, NgZone } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatCardComponent } from '../../shared/stat-card/stat-card';
+import { DashboardService } from '../../services/dashboard.service';
 import {
   Chart,
   LineController,
@@ -20,34 +21,81 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryS
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })
-export class DashboardComponent implements AfterViewInit, OnDestroy {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('gainChart') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private chart: Chart | null = null;
 
-  stats: { label: string; value: string; unite?: string; icon: string; iconBg: string; iconColor: string }[] = [
-    { label: 'Nombre de Conducteurs', value: '21',         icon: 'drive_eta',           iconBg: '#fff3ef', iconColor: '#F05A28' },
-    { label: 'Abonnements Payés',     value: '16',         icon: 'card_membership',     iconBg: '#e8f5e9', iconColor: '#43A047' },
-    { label: 'Cumul Gains',           value: '1 280 000',  icon: 'account_balance_wallet', iconBg: '#e3f2fd', iconColor: '#1E88E5', unite: 'FCFA' },
+  chartLoading = true;
+  chartError   = false;
+
+  statsLoading = true;
+  statsError   = false;
+
+  /** Données reçues avant que le canvas soit disponible */
+  private pendingLabels: string[] = [];
+  private pendingValues: number[] = [];
+  private viewReady = false;
+
+  stats: { label: string; value: string | null; unite?: string; icon: string; iconBg: string; iconColor: string }[] = [
+    { label: 'Nombre de Conducteurs', value: null, icon: 'drive_eta',              iconBg: '#fff3ef', iconColor: '#F05A28' },
+    { label: 'Abonnements Payés',     value: null, icon: 'card_membership',         iconBg: '#e8f5e9', iconColor: '#43A047' },
+    { label: 'Cumul Gains',           value: null, icon: 'account_balance_wallet',  iconBg: '#e3f2fd', iconColor: '#1E88E5', unite: 'FCFA' },
   ];
 
-  private readonly months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
-  private readonly values = [180000, 220000, 195000, 310000, 280000, 350000, 290000, 400000, 380000, 420000, 460000, 500000];
+  constructor(private zone: NgZone, private dashboardService: DashboardService) {}
 
-  constructor(private zone: NgZone) {}
+  ngOnInit(): void {
+    this.dashboardService.getStats().subscribe({
+      next: (data) => {
+        this.statsLoading  = false;
+        this.stats[0].value = data.conducteurs.toLocaleString('fr-FR');
+        this.stats[1].value = data.abonnements.toLocaleString('fr-FR');
+        this.stats[2].value = data.gains.toLocaleString('fr-FR');
+      },
+      error: () => {
+        this.statsLoading = false;
+        this.statsError   = true;
+        this.stats.forEach(s => (s.value = '—'));
+      },
+    });
 
-  ngAfterViewInit(): void {
-    // Run outside Angular to avoid change detection overhead
-    this.zone.runOutsideAngular(() => {
-      setTimeout(() => this.buildChart(), 0);
+    this.dashboardService.getEvolutionGain().subscribe({
+      next: ({ labels, values }) => {
+        this.chartLoading = false;
+        if (this.viewReady) {
+          // setTimeout(0) laisse Angular re-rendre le canvas (@else devient actif)
+          // avant qu'on tente d'accéder à canvasRef
+          setTimeout(() => {
+            this.zone.runOutsideAngular(() => this.buildChart(labels, values));
+          }, 0);
+        } else {
+          // Canvas pas encore disponible : on mémorise
+          this.pendingLabels = labels;
+          this.pendingValues = values;
+        }
+      },
+      error: () => {
+        this.chartLoading = false;
+        this.chartError   = true;
+      },
     });
   }
 
-  private buildChart(): void {
+  ngAfterViewInit(): void {
+    this.viewReady = true;
+    // Si les données sont déjà arrivées, on construit le chart maintenant
+    if (!this.chartLoading && !this.chartError && this.pendingLabels.length) {
+      this.zone.runOutsideAngular(() =>
+        this.buildChart(this.pendingLabels, this.pendingValues),
+      );
+    }
+  }
+
+  private buildChart(labels: string[], values: number[]): void {
     const canvas = this.canvasRef.nativeElement;
     const ctx = canvas.getContext('2d')!;
 
-    // ── Variable radius based on value (like the reference) ──────────────────
     const radiusFn = (context: any): number => {
       const v: number = context.parsed?.y ?? 0;
       if (v < 200000) return 6;
@@ -57,26 +105,25 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       return 14;
     };
 
-    // ── Alternating circle / rect point style ─────────────────────────────────
     const styleFn = (context: any): 'circle' | 'rect' =>
       context.dataIndex % 2 === 0 ? 'circle' : 'rect';
 
     this.chart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: this.months,
+        labels,
         datasets: [{
           label: 'Gains (FCFA)',
-          data: this.values,
+          data: values,
           fill: false,
           borderColor: '#F05A28',
           borderWidth: 2.5,
-          tension: 0,                   // straight lines like the reference
+          tension: 0.4,
           pointBackgroundColor: '#F05A28',
           pointBorderColor: '#fff',
           pointBorderWidth: 2,
           pointRadius: radiusFn,
-          pointHoverRadius: radiusFn,   // keep same size on hover
+          pointHoverRadius: radiusFn,
           pointStyle: styleFn as any,
         }],
       },
@@ -110,6 +157,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
           },
           y: {
             beginAtZero: true,
+            max: 200000,
             border: { display: false },
             grid: { color: '#efefef' },
             ticks: {

@@ -8,7 +8,19 @@
     </div>
   </div>
 
+  @if (isLoading) {
+    <div class="loading-state">
+      <span class="material-icons loading-spin">sync</span>
+      Chargement...
+    </div>
+  }
+
+  @if (errorMsg) {
+    <div class="error-state">{{ errorMsg }}</div>
+  }
+
   <!-- Tableau -->
+  @if (!isLoading && !errorMsg) {
   <lib-table-card>
 
     <div toolbar class="toolbar">
@@ -106,6 +118,8 @@
     </div>
 
   </lib-table-card>
+  }
+
 </div>
 
 <!-- ── Drawer détail conducteur ── -->

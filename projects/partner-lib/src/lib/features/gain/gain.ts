@@ -1,19 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StatCardComponent } from '../../shared/stat-card/stat-card';
 import { TableCardComponent } from '../../shared/table-card/table-card';
-import { ExportService } from '../../shared/export.service';
+import { ExportService } from '../../services/export.service';
+import { AbonnementService } from '../../services/abonnement.service';
 import { DateRangePickerComponent, DateRange } from '../../shared/date-range-picker/date-range-picker';
-
-export interface Gain {
-  id: number;
-  date: string;
-  source: string;
-  montant: number;
-  moyenPaiement: 'Wave' | 'Chèque' | 'Compte bancaire';
-  statut: 'Payé';
-}
+import { Gain } from '../../models/gain.model';
 
 @Component({
   selector: 'lib-gain',
@@ -22,52 +15,59 @@ export interface Gain {
   templateUrl: './gain.html',
   styleUrls: ['./gain.scss'],
 })
-export class GainComponent {
+export class GainComponent implements OnInit {
 
-  constructor(private exportSvc: ExportService) {}
+  constructor(
+    private exportSvc: ExportService,
+    private abonnementSvc: AbonnementService,
+  ) {}
+
+  isLoading = true;
+  errorMsg  = '';
+
+  private allGains: Gain[] = [];
+
+  gainsTotaux        = 0;
+  nombreTransactions = 0;
+
+  ngOnInit(): void {
+    this.abonnementSvc.getAll().subscribe({
+      next: (data) => {
+        this.allGains           = data.gains;
+        this.gainsTotaux        = data.cumul;
+        this.nombreTransactions = data.gains.length;
+        this.isLoading          = false;
+      },
+      error: () => {
+        this.errorMsg  = 'Impossible de charger les gains.';
+        this.isLoading = false;
+      },
+    });
+  }
 
   exportToExcel(): void {
     const rows = this.filtered.map(g => ({
-      'Date':              g.date,
-      'Référence':         g.source,
-      'Montant (FCFA)':    g.montant,
-      'Moyen de paiement': g.moyenPaiement,
-      'Statut':            g.statut,
+      'Date':           g.date,
+      'Référence':      g.source,
+      'Montant (FCFA)': g.montant,
+      'Statut':         g.statut,
     }));
     this.exportSvc.exportToExcel(rows, 'Débit_Gains', 'Débit Gains');
   }
 
-  private allGains: Gain[] = [
-    { id: 1,  date: '20/02/2026 14:32', source: 'TXN-2026-00147', montant: 1500, moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 2,  date: '20/02/2026 09:15', source: 'TXN-2026-00146', montant: 500,  moyenPaiement: 'Chèque',          statut: 'Payé' },
-    { id: 3,  date: '19/02/2026 16:45', source: 'TXN-2026-00143', montant: 100,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
-    { id: 4,  date: '19/02/2026 11:20', source: 'TXN-2026-00141', montant: 1500, moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 5,  date: '18/02/2026 08:50', source: 'TXN-2026-00138', montant: 500,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
-    { id: 6,  date: '18/02/2026 13:05', source: 'TXN-2026-00135', montant: 100,  moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 7,  date: '17/02/2026 10:30', source: 'TXN-2026-00129', montant: 1500, moyenPaiement: 'Chèque',          statut: 'Payé' },
-    { id: 8,  date: '17/02/2026 15:55', source: 'TXN-2026-00126', montant: 500,  moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 9,  date: '16/02/2026 07:40', source: 'TXN-2026-00122', montant: 100,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
-    { id: 10, date: '16/02/2026 12:10', source: 'TXN-2026-00118', montant: 1500, moyenPaiement: 'Wave',            statut: 'Payé' },
-    { id: 11, date: '15/02/2026 09:25', source: 'TXN-2026-00114', montant: 500,  moyenPaiement: 'Chèque',          statut: 'Payé' },
-    { id: 12, date: '15/02/2026 17:00', source: 'TXN-2026-00110', montant: 100,  moyenPaiement: 'Compte bancaire', statut: 'Payé' },
-  ];
-
   // ── Filtres ───────────────────────────────────────────────────────────────
-  search      = '';
-  dateDebut   = '';   // format YYYY-MM-DD
-  dateFin     = '';   // format YYYY-MM-DD
-  moyenFiltre = 'Tous';
-  moyens      = ['Tous', 'Wave', 'Chèque', 'Compte bancaire'];
+  search    = '';
+  dateDebut = '';
+  dateFin   = '';
 
   // ── Pagination ────────────────────────────────────────────────────────────
   pageSize    = 5;
   currentPage = 1;
   pageSizes   = [5, 10, 20];
 
-  /** Parse 'DD/MM/YYYY HH:mm' → Date */
   private toDate(str: string): Date {
-    const [d, m, y] = str.split(' ')[0].split('/');
-    return new Date(Number(y), Number(m) - 1, Number(d));
+    const parts = str.split(' ')[0].split('/');
+    return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
   }
 
   get filtered(): Gain[] {
@@ -76,10 +76,7 @@ export class GainComponent {
       const matchSearch = !q
         || g.source.toLowerCase().includes(q)
         || g.montant.toString().includes(q)
-        || g.date.includes(q)
-        || g.moyenPaiement.toLowerCase().includes(q);
-
-      const matchMoyen = this.moyenFiltre === 'Tous' || g.moyenPaiement === this.moyenFiltre;
+        || g.date.includes(q);
 
       const gDate = this.toDate(g.date);
       let matchDate = true;
@@ -92,7 +89,7 @@ export class GainComponent {
         matchDate = gDate <= new Date(Number(y), Number(m) - 1, Number(d));
       }
 
-      return matchSearch && matchMoyen && matchDate;
+      return matchSearch && matchDate;
     });
   }
 
@@ -109,32 +106,16 @@ export class GainComponent {
     return this.filtered.slice(start, start + this.pageSize);
   }
 
-  get gainsTotaux(): number {
-    return this.allGains.reduce((sum, g) => sum + g.montant, 0);
-  }
-
-  get gainsDuMois(): number {
-    const moisActuel = '02/2026';
-    return this.allGains
-      .filter(g => g.date.slice(3) === moisActuel)
-      .reduce((sum, g) => sum + g.montant, 0);
-  }
-
-  get nombreTransactions(): number {
-    return this.allGains.length;
-  }
-
   goTo(page: number): void {
     if (page >= 1 && page <= this.totalPages) this.currentPage = page;
   }
 
   onRangeChange(r: DateRange): void {
-    this.dateDebut = r.debut;
-    this.dateFin   = r.fin;
+    this.dateDebut   = r.debut;
+    this.dateFin     = r.fin;
     this.currentPage = 1;
   }
 
   onSearchChange(): void   { this.currentPage = 1; }
-  onMoyenChange(): void    { this.currentPage = 1; }
   onPageSizeChange(): void { this.currentPage = 1; }
 }

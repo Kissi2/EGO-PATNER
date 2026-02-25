@@ -8,32 +8,36 @@
     </div>
   </div>
 
+  @if (errorMsg) {
+    <div class="error-state">{{ errorMsg }}</div>
+  }
+
   <!-- Stat cards -->
   <div class="stats-grid">
     <lib-stat-card
       label="Abonnements Journaliers"
-      [value]="totalJournalier"
+      [value]="isLoading ? null : totalJournalier"
       icon="today"
       iconBg="#fff3ef"
       iconColor="#F05A28"
     ></lib-stat-card>
     <lib-stat-card
       label="Abonnements Hebdomadaires"
-      [value]="totalHebdomadaire"
+      [value]="isLoading ? null : totalHebdomadaire"
       icon="date_range"
       iconBg="#e8f5e9"
       iconColor="#43A047"
     ></lib-stat-card>
     <lib-stat-card
       label="Abonnements Mensuels"
-      [value]="totalMensuel"
+      [value]="isLoading ? null : totalMensuel"
       icon="calendar_month"
       iconBg="#e3f2fd"
       iconColor="#1E88E5"
     ></lib-stat-card>
     <lib-stat-card
       label="Cumul Gains"
-      [value]="cumulGain | number"
+      [value]="isLoading ? null : (cumulGain | number)"
       unite="FCFA"
       icon="account_balance_wallet"
       iconBg="#f3e5f5"

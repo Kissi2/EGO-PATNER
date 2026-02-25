@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, RouterLinkActive } from '@angular/router';
-import { SidebarStateService } from '../../shared/sidebar-state.service';
+import { SidebarStateService } from '../../services/sidebar-state.service';
 
 @Component({
   selector: 'lib-sidebar',
@@ -24,7 +24,7 @@ export class SidebarComponent {
     { label: 'Tableau de Bord',      icon: 'dashboard',              route: '/dashboard' },
     { label: 'Conducteurs',           icon: 'drive_eta',              route: '/conducteur' },
     { label: 'Abonnements et gains',  icon: 'card_membership',        route: '/abonnement' },
-    { label: 'Débit gains',           icon: 'account_balance_wallet', route: '/gain' },
+    // { label: 'Débit gains',           icon: 'account_balance_wallet', route: '/gain' },
   ];
 
   goToProfile(): void {

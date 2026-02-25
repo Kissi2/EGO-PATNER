@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { SidebarStateService } from '../../shared/sidebar-state.service';
+import { SidebarStateService } from '../../services/sidebar-state.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'lib-topbar',
@@ -13,12 +14,19 @@ import { SidebarStateService } from '../../shared/sidebar-state.service';
 export class TopbarComponent {
   currentDate = new Date();
 
-  admin = {
-    name: 'Ruth-Eunice',
-    role: 'Partenaire',
-  };
+  readonly userName = computed(() => {
+    const u = this.authService.currentUser();
+    if (!u) return '';
+    return [u.firstName, u.lastName].filter(Boolean).join(' ') || u.username || '';
+  });
 
-  constructor(private router: Router, public sidebarState: SidebarStateService) {}
+  readonly userRole = computed(() => this.authService.currentUser()?.role ?? '');
+
+  constructor(
+    private router: Router,
+    public sidebarState: SidebarStateService,
+    private authService: AuthService,
+  ) {}
 
   goToProfile(): void {
     this.router.navigate(['/profil']);

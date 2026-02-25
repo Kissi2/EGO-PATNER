@@ -8,27 +8,23 @@
     </div>
   </div>
 
+  @if (errorMsg) {
+    <div class="error-state">{{ errorMsg }}</div>
+  }
+
   <!-- Stat cards -->
   <div class="stats-grid">
     <lib-stat-card
       label="Gains Totaux"
-      [value]="gainsTotaux | number"
+      [value]="isLoading ? null : (gainsTotaux | number)"
       unite="FCFA"
       icon="account_balance_wallet"
       iconBg="#fff3ef"
       iconColor="#F05A28"
     ></lib-stat-card>
     <lib-stat-card
-      label="Gains du Mois"
-      [value]="gainsDuMois | number"
-      unite="FCFA"
-      icon="trending_up"
-      iconBg="#e8f5e9"
-      iconColor="#43A047"
-    ></lib-stat-card>
-    <lib-stat-card
       label="Nombre de Transactions"
-      [value]="nombreTransactions"
+      [value]="isLoading ? null : nombreTransactions"
       icon="receipt_long"
       iconBg="#e3f2fd"
       iconColor="#1E88E5"
@@ -54,17 +50,6 @@
           [dateFin]="dateFin"
           (rangeChange)="onRangeChange($event)"
         ></lib-date-range-picker>
-        <div class="filter-group">
-          <span class="filter-label">Moyen :</span>
-          <div class="select-wrap">
-            <select [(ngModel)]="moyenFiltre" (ngModelChange)="onMoyenChange()">
-              @for (m of moyens; track m) {
-                <option [value]="m">{{ m }}</option>
-              }
-            </select>
-            <span class="material-icons chevron">expand_more</span>
-          </div>
-        </div>
       </div>
       <button class="btn-export" (click)="exportToExcel()" title="Exporter en Excel">
         <span class="material-icons">upload</span>
