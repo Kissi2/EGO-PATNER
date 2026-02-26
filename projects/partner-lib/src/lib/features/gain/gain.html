@@ -31,7 +31,32 @@
     ></lib-stat-card>
   </div>
 
+  <!-- Skeleton tableau -->
+  @if (isLoading) {
+    <div class="skel-table-card">
+      <div class="skel-toolbar">
+        <div class="sk sk--search"></div>
+        <div class="sk sk--filter"></div>
+      </div>
+      <div class="skel-thead">
+        @for (_ of [1,2,3,4,5]; track $index) {
+          <div class="sk sk--th"></div>
+        }
+      </div>
+      @for (_ of skelRows; track $index) {
+        <div class="skel-row">
+          <div class="sk sk--cell"></div>
+          <div class="sk sk--cell"></div>
+          <div class="sk sk--cell"></div>
+          <div class="sk sk--badge"></div>
+          <div class="sk sk--badge"></div>
+        </div>
+      }
+    </div>
+  }
+
   <!-- Tableau -->
+  @if (!isLoading) {
   <lib-table-card>
 
     <div toolbar class="toolbar">
@@ -128,4 +153,6 @@
     </div>
 
   </lib-table-card>
+  }
+
 </div>

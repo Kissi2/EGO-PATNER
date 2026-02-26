@@ -24,6 +24,7 @@ export class GainComponent implements OnInit {
 
   isLoading = true;
   errorMsg  = '';
+  readonly skelRows = [1, 2, 3, 4, 5];
 
   private allGains: Gain[] = [];
 
