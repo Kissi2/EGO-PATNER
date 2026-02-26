@@ -23,6 +23,8 @@ export class ConducteurComponent implements OnInit {
   isLoading = true;
   errorMsg  = '';
 
+  readonly skelRows = [1, 2, 3, 4, 5];
+
   private allDrivers: Driver[] = [];
 
   ngOnInit(): void {
@@ -66,6 +68,12 @@ export class ConducteurComponent implements OnInit {
 
   openDetail(driver: Driver): void  { this.selectedDriver = driver; }
   closeDetail(): void               { this.selectedDriver = null;   }
+
+  // ── Zoom photo ────────────────────────────────────────────────────────────
+  zoomedPhoto: string | null = null;
+
+  openZoom(src: string): void  { this.zoomedPhoto = src; }
+  closeZoom(): void            { this.zoomedPhoto = null; }
 
   get filtered(): Driver[] {
     return this.allDrivers.filter(d => {

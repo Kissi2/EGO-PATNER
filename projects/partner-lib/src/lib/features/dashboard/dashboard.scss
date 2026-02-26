@@ -1,3 +1,38 @@
+/* ── Skeleton shimmer ── */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.skel-chart {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.skel-chart__bar {
+  flex: 1;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px 4px 0 0;
+
+  &:nth-child(1)  { animation-delay: 0s;    }
+  &:nth-child(2)  { animation-delay: 0.08s; }
+  &:nth-child(3)  { animation-delay: 0.16s; }
+  &:nth-child(4)  { animation-delay: 0.24s; }
+  &:nth-child(5)  { animation-delay: 0.32s; }
+  &:nth-child(6)  { animation-delay: 0.40s; }
+  &:nth-child(7)  { animation-delay: 0.48s; }
+  &:nth-child(8)  { animation-delay: 0.56s; }
+  &:nth-child(9)  { animation-delay: 0.64s; }
+  &:nth-child(10) { animation-delay: 0.72s; }
+  &:nth-child(11) { animation-delay: 0.80s; }
+  &:nth-child(12) { animation-delay: 0.88s; }
+}
+
 .page {
   padding: 20px 32px 32px;
 

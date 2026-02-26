@@ -9,9 +9,26 @@
   </div>
 
   @if (isLoading) {
-    <div class="loading-state">
-      <span class="material-icons loading-spin">sync</span>
-      Chargement...
+    <div class="skel-table-card">
+      <div class="skel-toolbar">
+        <div class="sk sk--search"></div>
+        <div class="sk sk--filter"></div>
+      </div>
+      <div class="skel-thead">
+        @for (_ of [1,2,3,4,5,6]; track $index) {
+          <div class="sk sk--th"></div>
+        }
+      </div>
+      @for (_ of skelRows; track $index) {
+        <div class="skel-row">
+          <div class="sk sk--photo"></div>
+          <div class="sk sk--name"></div>
+          <div class="sk sk--phone"></div>
+          <div class="sk sk--permis"></div>
+          <div class="sk sk--badge"></div>
+          <div class="sk sk--btn"></div>
+        </div>
+      }
     </div>
   }
 
@@ -122,6 +139,16 @@
 
 </div>
 
+<!-- ── Zoom photo ── -->
+@if (zoomedPhoto) {
+  <div class="photo-zoom-backdrop" (click)="closeZoom()">
+    <img [src]="zoomedPhoto" class="photo-zoom-img" (click)="$event.stopPropagation()" />
+    <button class="photo-zoom-close" (click)="closeZoom()">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+}
+
 <!-- ── Drawer détail conducteur ── -->
 @if (selectedDriver) {
   <div class="drawer-backdrop" (click)="closeDetail()"></div>
@@ -133,9 +160,10 @@
 
     <!-- Profil -->
     <div class="drawer-profile">
-      <div class="drawer-photo-wrap">
+      <div class="drawer-photo-wrap" (click)="openZoom(selectedDriver.photo)" title="Voir en grand">
         <img [src]="selectedDriver.photo" [alt]="selectedDriver.nomComplet" class="drawer-photo"
              onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.alt) + '&background=F05A28&color=fff&size=80'" />
+        <div class="drawer-photo-zoom-hint"><span class="material-icons">zoom_in</span></div>
       </div>
       <h2 class="drawer-name">{{ selectedDriver.nomComplet }}</h2>
       <span class="drawer-badge"

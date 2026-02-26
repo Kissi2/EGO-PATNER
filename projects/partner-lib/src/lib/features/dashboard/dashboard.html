@@ -28,8 +28,10 @@
     </div>
     <div class="chart-container">
       @if (chartLoading) {
-        <div class="chart-state">
-          <span class="material-icons chart-state__spinner">sync</span>
+        <div class="skel-chart">
+          @for (h of skelBars; track $index) {
+            <div class="skel-chart__bar" [style.height.%]="h"></div>
+          }
         </div>
       } @else if (chartError) {
         <div class="chart-state chart-state--error">

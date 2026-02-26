@@ -32,6 +32,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   statsLoading = true;
   statsError   = false;
 
+  readonly skelBars = [48, 72, 55, 90, 63, 44, 80, 58, 76, 40, 88, 65];
+
   /** Données reçues avant que le canvas soit disponible */
   private pendingLabels: string[] = [];
   private pendingValues: number[] = [];

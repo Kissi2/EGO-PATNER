@@ -4,12 +4,8 @@
 }
 
 @keyframes rd-drive {
-  from { transform: translateX(0); }
-  to   { transform: translateX(220px); }
-}
-
-@keyframes rd-wheel {
-  to { transform: rotate(360deg); }
+  from { transform: translateX(calc(-50vw - 200px)); }
+  to   { transform: translateX(calc(50vw + 200px)); }
 }
 
 .redirect {
@@ -20,17 +16,12 @@
   align-items: center;
   justify-content: center;
   animation: rd-in 0.2s ease;
+  overflow: hidden;
 
   &__car {
-    width: 168px;
+    width: 320px;
     height: auto;
     display: block;
-    animation: rd-drive 3.6s 0.15s linear both;
+    animation: rd-drive 5.5s 0.1s linear both;
   }
-}
-
-.redirect__wheel {
-  animation: rd-wheel 1.1s 0.15s linear infinite;
-  transform-box: fill-box;
-  transform-origin: center;
 }

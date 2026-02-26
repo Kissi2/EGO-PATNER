@@ -1,14 +1,24 @@
 <div class="stat-card">
   <div class="stat-card__body">
-    <p class="stat-card__label">{{ label | uppercase }}</p>
-    <h2 class="stat-card__value">
-      {{ value }}
-      @if (unite) {
-        <span class="stat-card__unite">{{ unite }}</span>
-      }
-    </h2>
+    @if (value === null) {
+      <div class="sk sk--label"></div>
+      <div class="sk sk--value"></div>
+    } @else {
+      <p class="stat-card__label">{{ label | uppercase }}</p>
+      <h2 class="stat-card__value">
+        {{ value }}
+        @if (unite) {
+          <span class="stat-card__unite">{{ unite }}</span>
+        }
+      </h2>
+    }
   </div>
-  <div class="stat-card__icon" [style.background]="iconBg">
-    <span class="material-icons" [style.color]="iconColor">{{ icon }}</span>
-  </div>
+
+  @if (value === null) {
+    <div class="sk sk--icon"></div>
+  } @else {
+    <div class="stat-card__icon" [style.background]="iconBg">
+      <span class="material-icons" [style.color]="iconColor">{{ icon }}</span>
+    </div>
+  }
 </div>
