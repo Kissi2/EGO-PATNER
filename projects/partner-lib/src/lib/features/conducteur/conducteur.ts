@@ -54,7 +54,7 @@ export class ConducteurComponent implements OnInit {
   // ── Filters ───────────────────────────────────────────────────────────────
   search  = '';
   filtre  = 'Tous';
-  filtres = ['Tous', 'Actif', 'Inactif', 'En attente'];
+  filtres = ['Tous', 'Actif', 'Inactif'];
 
   // ── Pagination ────────────────────────────────────────────────────────────
   pageSize    = 5;

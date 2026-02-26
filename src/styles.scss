@@ -297,14 +297,39 @@ table {
     padding: 14px 16px;
   }
 
+  /* Ligne 1 : recherche + export */
   .search-box {
+    order: 1;
     flex: 1;
     min-width: 180px;
+    width: auto;
   }
 
+  .btn-export {
+    order: 2;
+    flex-shrink: 0;
+  }
+
+  /* Ligne 2 : date picker + filtre type (prend toute la largeur) */
   .toolbar-right {
+    order: 3;
+    flex: 0 0 100%;
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
     flex-wrap: wrap;
     gap: 10px;
+  }
+
+  /* Pagination : sélecteur taille en statique pour éviter le chevauchement */
+  .pagination__size {
+    position: static;
+  }
+
+  .pagination {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 }
 
@@ -316,17 +341,23 @@ table {
     gap: 10px;
   }
 
+  /* Réinitialiser l'ordre défini pour tablette → ordre naturel HTML :
+     1) recherche  2) date+filtre  3) export */
   .search-box {
+    order: 0;
     width: 100%;
     min-width: 0;
   }
 
   .btn-export {
+    order: 0;
     width: 100%;
     justify-content: center;
   }
 
   .toolbar-right {
+    order: 0;
+    flex: none;
     width: 100%;
     margin-left: 0;
     justify-content: space-between;
@@ -345,6 +376,7 @@ table {
   /* Pagination sur mobile */
   .pagination {
     flex-direction: column;
+    align-items: center;
     gap: 12px;
     padding: 14px 16px;
 

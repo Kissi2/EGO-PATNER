@@ -6,6 +6,17 @@
       <h1 class="page__title">Abonnements &amp; Gains</h1>
       <p class="page__subtitle">Consultez la liste des abonnements et vos gains</p>
     </div>
+    <div class="periode-filter">
+      <span class="periode-filter__label">Période :</span>
+      <div class="select-wrap">
+        <select [(ngModel)]="periodeFiltre" (ngModelChange)="onPeriodeChange()">
+          @for (p of periodes; track p.value) {
+            <option [value]="p.value">{{ p.label }}</option>
+          }
+        </select>
+        <span class="material-icons chevron">expand_more</span>
+      </div>
+    </div>
   </div>
 
   @if (errorMsg) {
@@ -36,7 +47,7 @@
       iconColor="#1E88E5"
     ></lib-stat-card>
     <lib-stat-card
-      label="Cumul Gains"
+      label="  Cumul Gains "
       [value]="isLoading ? null : (cumulGain | number)"
       unite="FCFA"
       icon="account_balance_wallet"

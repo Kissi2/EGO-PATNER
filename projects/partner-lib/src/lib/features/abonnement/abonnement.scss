@@ -12,6 +12,11 @@
     background: #f5f6fa;
     padding-bottom: 10px;
     margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   &__title {
@@ -19,6 +24,9 @@
     font-weight: 700;
     color: #1a1a1a;
     margin: 0 0 4px;
+
+    @media (max-width: 1024px) { font-size: 22px; }
+    @media (max-width: 640px)  { font-size: 18px; }
   }
 
   &__subtitle {
@@ -43,6 +51,54 @@
 .name-cell    { font-weight: 500; }
 .montant-cell { font-weight: 600; color: #1a1a1a; }
 .gain-cell    { font-weight: 500; color: #1a1a1a; text-align: right; }
+
+/* ── Filtre période (header) ── */
+.periode-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  &__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    white-space: nowrap;
+
+    @media (max-width: 480px) { display: none; }
+  }
+
+  .select-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    select {
+      appearance: none;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 8px 36px 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+
+      &:focus,
+      &:hover { border-color: #F05A28; }
+    }
+
+    .chevron {
+      position: absolute;
+      right: 8px;
+      font-size: 18px;
+      color: #888;
+      pointer-events: none;
+    }
+  }
+}
 
 /* ── Badges type abonnement ── */
 .type-badge {

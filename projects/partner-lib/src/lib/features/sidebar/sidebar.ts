@@ -16,7 +16,7 @@ export class SidebarComponent {
   showLogoutModal = false;
 
   admin = {
-    name: 'Ruth-Eunice',
+    name: 'Administrateur ',
     role: 'Partenaire',
   };
 

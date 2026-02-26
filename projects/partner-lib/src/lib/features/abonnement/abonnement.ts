@@ -27,21 +27,52 @@ export class AbonnementComponent implements OnInit {
 
   private allPaiements: Paiement[] = [];
 
-  // ── Stats API ─────────────────────────────────────────────────────────────
-  totalJournalier   = 0;
-  totalHebdomadaire = 0;
-  totalMensuel      = 0;
-  cumulGain         = 0;
+  // ── Valeurs brutes API ────────────────────────────────────────────────────
+  private _totalJournalier   = 0;
+  private _totalHebdomadaire = 0;
+  private _totalMensuel      = 0;
+  private _cumulGain         = 0;
+
+  // ── Filtre période ────────────────────────────────────────────────────────
+  periodeFiltre = 'all';
+  periodes = [
+    { label: 'Tout',          value: 'all'   },
+    { label: "Aujourd'hui",   value: 'today' },
+    { label: 'Cette semaine', value: 'week'  },
+    { label: 'Ce mois',       value: 'month' },
+    { label: 'Cette année',   value: 'year'  },
+  ];
+
+  // ── Stats calculées selon la période ─────────────────────────────────────
+  get totalJournalier(): number {
+    if (this.periodeFiltre === 'all') return this._totalJournalier;
+    return this.periodePaiements.filter(p => p.typeAbonnement === 'Journalier').length;
+  }
+
+  get totalHebdomadaire(): number {
+    if (this.periodeFiltre === 'all') return this._totalHebdomadaire;
+    return this.periodePaiements.filter(p => p.typeAbonnement === 'Hebdomadaire').length;
+  }
+
+  get totalMensuel(): number {
+    if (this.periodeFiltre === 'all') return this._totalMensuel;
+    return this.periodePaiements.filter(p => p.typeAbonnement === 'Mensuel').length;
+  }
+
+  get cumulGain(): number {
+    if (this.periodeFiltre === 'all') return this._cumulGain;
+    return this.periodePaiements.reduce((sum, p) => sum + p.gain, 0);
+  }
 
   ngOnInit(): void {
     this.abonnementSvc.getAll().subscribe({
       next: (data) => {
-        this.allPaiements      = data.paiements;
-        this.totalJournalier   = data.totalJournalier;
-        this.totalHebdomadaire = data.totalHebdomadaire;
-        this.totalMensuel      = data.totalMensuel;
-        this.cumulGain         = data.cumul;
-        this.isLoading         = false;
+        this.allPaiements        = data.paiements;
+        this._totalJournalier   = data.totalJournalier;
+        this._totalHebdomadaire = data.totalHebdomadaire;
+        this._totalMensuel      = data.totalMensuel;
+        this._cumulGain         = data.cumul;
+        this.isLoading          = false;
       },
       error: () => {
         this.errorMsg  = 'Impossible de charger les abonnements.';
@@ -61,7 +92,7 @@ export class AbonnementComponent implements OnInit {
     this.exportSvc.exportToExcel(rows, 'Abonnements', 'Abonnements');
   }
 
-  // ── Filtres ───────────────────────────────────────────────────────────────
+  // ── Filtres tableau ───────────────────────────────────────────────────────
   search    = '';
   filtre    = 'Tous';
   filtres   = ['Tous', 'Journalier', 'Hebdomadaire', 'Mensuel'];
@@ -74,12 +105,48 @@ export class AbonnementComponent implements OnInit {
   pageSizes   = [5, 10, 20];
 
   private toDate(str: string): Date {
-    const parts = str.split(' ')[0].split('/');
+    const parts = str.split(' ')[0].replace(',', '').split('/');
     return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
   }
 
-  get filtered(): Paiement[] {
+  /** Paiements filtrés par la période sélectionnée dans le header */
+  private get periodePaiements(): Paiement[] {
+    if (this.periodeFiltre === 'all') return this.allPaiements;
+
+    const now        = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayEnd   = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    let from: Date;
+
+    switch (this.periodeFiltre) {
+      case 'today':
+        from = todayStart;
+        break;
+      case 'week': {
+        const day = now.getDay() === 0 ? 7 : now.getDay();
+        from = new Date(todayStart);
+        from.setDate(todayStart.getDate() - day + 1);
+        break;
+      }
+      case 'month':
+        from = new Date(now.getFullYear(), now.getMonth(), 1);
+        break;
+      case 'year':
+        from = new Date(now.getFullYear(), 0, 1);
+        break;
+      default:
+        return this.allPaiements;
+    }
+
     return this.allPaiements.filter(p => {
+      const d = this.toDate(p.datePaiement);
+      return d >= from && d <= todayEnd;
+    });
+  }
+
+  /** Paiements filtrés par période + recherche + type + plage de dates */
+  get filtered(): Paiement[] {
+    return this.periodePaiements.filter(p => {
       const q = this.search.toLowerCase();
       const matchSearch = !q
         || p.conducteur.toLowerCase().includes(q)
@@ -121,6 +188,7 @@ export class AbonnementComponent implements OnInit {
     if (page >= 1 && page <= this.totalPages) this.currentPage = page;
   }
 
+  onPeriodeChange(): void  { this.currentPage = 1; }
   onRangeChange(r: DateRange): void {
     this.dateDebut   = r.debut;
     this.dateFin     = r.fin;

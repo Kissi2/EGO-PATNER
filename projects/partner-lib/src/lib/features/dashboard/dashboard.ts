@@ -1,4 +1,4 @@
-import { Component, OnDestroy, AfterViewInit, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit, OnInit, ElementRef, ViewChild, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatCardComponent } from '../../shared/stat-card/stat-card';
 import { DashboardService } from '../../services/dashboard.service';
@@ -43,7 +43,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     { label: 'Cumul Gains',           value: null, icon: 'account_balance_wallet',  iconBg: '#e3f2fd', iconColor: '#1E88E5', unite: 'FCFA' },
   ];
 
-  constructor(private zone: NgZone, private dashboardService: DashboardService) {}
+  constructor(
+    private zone: NgZone,
+    private dashboardService: DashboardService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.dashboardService.getStats().subscribe({
@@ -64,11 +68,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       next: ({ labels, values }) => {
         this.chartLoading = false;
         if (this.viewReady) {
-          // setTimeout(0) laisse Angular re-rendre le canvas (@else devient actif)
-          // avant qu'on tente d'accéder à canvasRef
-          setTimeout(() => {
-            this.zone.runOutsideAngular(() => this.buildChart(labels, values));
-          }, 0);
+          // Force Angular à rendre le <canvas> avant d'y accéder
+          this.cdr.detectChanges();
+          this.zone.runOutsideAngular(() => this.buildChart(labels, values));
         } else {
           // Canvas pas encore disponible : on mémorise
           this.pendingLabels = labels;
@@ -86,6 +88,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.viewReady = true;
     // Si les données sont déjà arrivées, on construit le chart maintenant
     if (!this.chartLoading && !this.chartError && this.pendingLabels.length) {
+      this.cdr.detectChanges();
       this.zone.runOutsideAngular(() =>
         this.buildChart(this.pendingLabels, this.pendingValues),
       );
@@ -157,15 +160,15 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           y: {
             beginAtZero: true,
-            max: 200000,
-            border: { display: false },
-            grid: { color: '#efefef' },
+            max: 900000,
             ticks: {
+              stepSize: 100000,
               color: '#aaa',
               font: { size: 11, family: 'Inter, sans-serif' },
               callback: (v) => (Number(v) / 1000).toFixed(0) + 'k',
-              maxTicksLimit: 7,
             },
+            border: { display: false },
+            grid: { color: '#efefef' },
           },
         },
       },
