@@ -24,7 +24,7 @@ WORKDIR /app
 RUN npm install -g serve
 
 # copier le build Angular
-COPY --from=builder /app/dist/dashboard_partenaire/browser ./dist
+COPY --from=builder /app/dist/dashboard_patner/browser ./dist
 
 EXPOSE 9040
 
