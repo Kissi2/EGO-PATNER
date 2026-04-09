@@ -91,8 +91,20 @@ export class ConducteurComponent implements OnInit {
     return Math.max(1, Math.ceil(this.filtered.length / this.pageSize));
   }
 
-  get pageNumbers(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  get pageNumbers(): (number | null)[] {
+    const total = this.totalPages;
+    const cur   = this.currentPage;
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    const pages: (number | null)[] = [];
+    const addPage = (p: number) => { if (!pages.includes(p)) pages.push(p); };
+    addPage(1);
+    if (cur > 3) pages.push(null);
+    for (let p = Math.max(2, cur - 2); p <= Math.min(total - 1, cur + 2); p++) addPage(p);
+    if (cur < total - 2) pages.push(null);
+    addPage(total);
+    return pages;
   }
 
   get paginatedDrivers(): Driver[] {

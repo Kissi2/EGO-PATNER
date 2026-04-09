@@ -114,8 +114,12 @@
         <button class="pg-btn" [disabled]="currentPage === 1" (click)="goTo(currentPage - 1)">
           <span class="material-icons">chevron_left</span>
         </button>
-        @for (p of pageNumbers; track p) {
-          <button class="pg-btn" [class.pg-btn--active]="p === currentPage" (click)="goTo(p)">{{ p }}</button>
+        @for (p of pageNumbers; track $index) {
+          @if (p === null) {
+            <span class="pg-ellipsis">…</span>
+          } @else {
+            <button class="pg-btn" [class.pg-btn--active]="p === currentPage" (click)="goTo(p)">{{ p }}</button>
+          }
         }
         <button class="pg-btn" [disabled]="currentPage === totalPages" (click)="goTo(currentPage + 1)">
           <span class="material-icons">chevron_right</span>
