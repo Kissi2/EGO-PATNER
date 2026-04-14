@@ -36,6 +36,33 @@
     <div class="error-state">{{ errorMsg }}</div>
   }
 
+  <!-- Stat cards -->
+  @if (!isLoading && !errorMsg) {
+  <div class="stats-grid">
+    <lib-stat-card
+      label="Total Conducteurs"
+      [value]="totalConducteurs"
+      icon="people"
+      iconBg="#e8f5e9"
+      iconColor="#2e7d32"
+    ></lib-stat-card>
+    <lib-stat-card
+      label="Journée Démarrée"
+      [value]="totalJourneeDemare"
+      icon="play_circle"
+      iconBg="#e8f5e9"
+      iconColor="#2e7d32"
+    ></lib-stat-card>
+    <lib-stat-card
+      label="Journée Non Démarrée"
+      [value]="totalJourneeNonDemare"
+      icon="pause_circle"
+      iconBg="#fce4ec"
+      iconColor="#c62828"
+    ></lib-stat-card>
+  </div>
+  }
+
   <!-- Tableau -->
   @if (!isLoading && !errorMsg) {
   <lib-table-card>

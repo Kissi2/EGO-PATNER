@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableCardComponent } from '../../shared/table-card/table-card';
+import { StatCardComponent } from '../../shared/stat-card/stat-card';
 import { ExportService } from '../../services/export.service';
 import { ConducteurService } from '../../services/conducteur.service';
 import { Driver } from '../../models/conducteur.model';
@@ -9,7 +10,7 @@ import { Driver } from '../../models/conducteur.model';
 @Component({
   selector: 'lib-conducteur',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableCardComponent],
+  imports: [CommonModule, FormsModule, TableCardComponent, StatCardComponent],
   templateUrl: './conducteur.html',
   styleUrls: ['./conducteur.scss'],
 })
@@ -77,6 +78,18 @@ export class ConducteurComponent implements OnInit {
 
   openZoom(src: string): void  { this.zoomedPhoto = src; }
   closeZoom(): void            { this.zoomedPhoto = null; }
+
+  get totalConducteurs(): number {
+    return this.allDrivers.length;
+  }
+
+  get totalJourneeDemare(): number {
+    return this.allDrivers.filter(d => d.journee === 'OUI').length;
+  }
+
+  get totalJourneeNonDemare(): number {
+    return this.allDrivers.filter(d => d.journee === 'NON').length;
+  }
 
   get filtered(): Driver[] {
     return this.allDrivers.filter(d => {
