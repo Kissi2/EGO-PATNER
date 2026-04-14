@@ -46,6 +46,7 @@ export class ConducteurComponent implements OnInit {
       'Téléphone':    d.telephone,
       'N° Permis':    d.permis,
       'Statut':       d.statut,
+      'Journée':      d.journee,
       'Genre':        d.genre,
       'Abonné':       d.abonne,
       'Créé le':      d.creeLe,
@@ -54,9 +55,11 @@ export class ConducteurComponent implements OnInit {
   }
 
   // ── Filters ───────────────────────────────────────────────────────────────
-  search  = '';
-  filtre  = 'Tous';
-  filtres = ['Tous', 'Actif', 'Inactif'];
+  search         = '';
+  filtre         = 'Tous';
+  filtres        = ['Tous', 'Actif', 'Inactif'];
+  filtreJournee  = 'Tous';
+  filtresJournee = ['Tous', 'OUI', 'NON'];
 
   // ── Pagination ────────────────────────────────────────────────────────────
   pageSize    = 5;
@@ -82,8 +85,9 @@ export class ConducteurComponent implements OnInit {
         || d.nomComplet.toLowerCase().includes(q)
         || d.telephone.includes(q)
         || d.permis.toLowerCase().includes(q);
-      const matchStatut = this.filtre === 'Tous' || d.statut === this.filtre;
-      return matchSearch && matchStatut;
+      const matchStatut   = this.filtre === 'Tous' || d.statut === this.filtre;
+      const matchJournee  = this.filtreJournee === 'Tous' || d.journee === this.filtreJournee;
+      return matchSearch && matchStatut && matchJournee;
     });
   }
 
@@ -116,7 +120,8 @@ export class ConducteurComponent implements OnInit {
     if (page >= 1 && page <= this.totalPages) this.currentPage = page;
   }
 
-  onSearchChange(): void   { this.currentPage = 1; }
-  onFiltreChange(): void   { this.currentPage = 1; }
-  onPageSizeChange(): void { this.currentPage = 1; }
+  onSearchChange(): void        { this.currentPage = 1; }
+  onFiltreChange(): void        { this.currentPage = 1; }
+  onFiltreJourneeChange(): void { this.currentPage = 1; }
+  onPageSizeChange(): void      { this.currentPage = 1; }
 }

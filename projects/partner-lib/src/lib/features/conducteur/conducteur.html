@@ -15,7 +15,7 @@
         <div class="sk sk--filter"></div>
       </div>
       <div class="skel-thead">
-        @for (_ of [1,2,3,4,5,6]; track $index) {
+        @for (_ of [1,2,3,4,5,6,7]; track $index) {
           <div class="sk sk--th"></div>
         }
       </div>
@@ -50,15 +50,28 @@
           (ngModelChange)="onSearchChange()"
         />
       </div>
-      <div class="filter-group">
-        <span class="filter-label">Statut :</span>
-        <div class="select-wrap">
-          <select [(ngModel)]="filtre" (ngModelChange)="onFiltreChange()">
-            @for (f of filtres; track f) {
-              <option [value]="f">{{ f }}</option>
-            }
-          </select>
-          <span class="material-icons chevron">expand_more</span>
+      <div class="filter-row">
+        <div class="filter-group">
+          <span class="filter-label">Statut :</span>
+          <div class="select-wrap">
+            <select [(ngModel)]="filtre" (ngModelChange)="onFiltreChange()">
+              @for (f of filtres; track f) {
+                <option [value]="f">{{ f }}</option>
+              }
+            </select>
+            <span class="material-icons chevron">expand_more</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Journée :</span>
+          <div class="select-wrap">
+            <select [(ngModel)]="filtreJournee" (ngModelChange)="onFiltreJourneeChange()">
+              @for (f of filtresJournee; track f) {
+                <option [value]="f">{{ f }}</option>
+              }
+            </select>
+            <span class="material-icons chevron">expand_more</span>
+          </div>
         </div>
       </div>
       <button class="btn-export" (click)="exportToExcel()" title="Exporter en Excel">
@@ -75,6 +88,7 @@
           <th>Téléphone</th>
           <th>N° Permis</th>
           <th>Statut</th>
+          <th class="col-journee">Journée démarée</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -94,6 +108,12 @@
                 {{ driver.statut | uppercase }}
               </span>
             </td>
+            <td class="col-journee">
+              <span class="badge" [class.badge--actif]="driver.journee === 'OUI'"
+                                  [class.badge--inactif]="driver.journee === 'NON'">
+                {{ driver.journee }}
+              </span>
+            </td>
             <td>
               <div class="actions">
                 <button class="btn-action btn-view" title="Voir" (click)="openDetail(driver)">
@@ -104,7 +124,7 @@
           </tr>
         }
         @if (paginatedDrivers.length === 0) {
-          <tr><td colspan="6" class="empty">Aucun conducteur trouvé.</td></tr>
+          <tr><td colspan="7" class="empty">Aucun conducteur trouvé.</td></tr>
         }
       </tbody>
     </table>

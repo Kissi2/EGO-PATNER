@@ -21,6 +21,7 @@ interface ApiConducteur {
   genre: string;
   statut: 'en_attente' | 'actif' | 'inactif';
   est_abonne: boolean;
+  journee_id?: number;
   photo?: { url: string };
   permis?: { id: number; numero: string };
   taxis?: ApiTaxi[];
@@ -63,6 +64,7 @@ export class ConducteurService {
       statut:    STATUT_MAP[c.statut] ?? 'Inactif',
       genre:     c.genre,
       abonne:    c.est_abonne ? 'OUI' : 'NON',
+      journee:   (c.journee_id ?? 0) !== 0 ? 'OUI' : 'NON',
       creeLe,
       permis:    c.permis?.numero ?? '',
       vehicules,

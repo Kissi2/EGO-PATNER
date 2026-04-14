@@ -12,6 +12,7 @@ export interface Driver {
   statut: 'Actif' | 'Inactif' | 'En attente';
   genre: string;
   abonne: 'OUI' | 'NON';
+  journee: 'OUI' | 'NON';
   creeLe: string;
   permis: string;
   vehicules: Vehicle[];

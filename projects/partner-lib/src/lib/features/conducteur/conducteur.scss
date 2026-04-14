@@ -87,9 +87,17 @@
   }
 }
 
-/* ── Toolbar conducteur : filtre à droite ── */
-.toolbar .filter-group {
+/* ── Toolbar conducteur : filtres groupés à droite ── */
+.toolbar .filter-row {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Colonne Journée démarée centrée ── */
+table {
+  .col-journee { text-align: center; }
 }
 
 /* ── Photo conducteur ── */
