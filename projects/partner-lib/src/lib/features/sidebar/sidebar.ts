@@ -24,7 +24,6 @@ export class SidebarComponent {
     { label: 'Tableau de Bord',      icon: 'dashboard',              route: '/dashboard' },
     { label: 'Conducteurs',           icon: 'drive_eta',              route: '/conducteur' },
     { label: 'Journées démarrées',    icon: 'today',                  route: '/journees-demarrees' },
-    { label: 'Historique des journées', icon: 'history',              route: '/historique-journees' },
     { label: 'Abonnements et gains',  icon: 'card_membership',        route: '/abonnement' },
     // { label: 'Débit gains',           icon: 'account_balance_wallet', route: '/gain' },
   ];

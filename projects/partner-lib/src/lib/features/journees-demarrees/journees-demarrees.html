@@ -19,6 +19,17 @@
 
   <!-- Skeleton -->
   @if (isLoading) {
+    <div class="skel-stats-grid">
+      @for (_ of [1,2,3,4]; track $index) {
+        <div class="skel-stat-card">
+          <div class="sk sk--stat-icon"></div>
+          <div class="skel-stat-body">
+            <div class="sk sk--stat-value"></div>
+            <div class="sk sk--stat-label"></div>
+          </div>
+        </div>
+      }
+    </div>
     <div class="skel-filters-card">
       @for (_ of [1,2,3,4]; track $index) {
         <div class="sk sk--field"></div>
@@ -49,6 +60,48 @@
   }
 
   @if (!isLoading && !errorMsg) {
+
+    <!-- Stats journées -->
+    @if (stats) {
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--orange">
+            <span class="material-icons">calendar_today</span>
+          </div>
+          <div class="stat-body">
+            <span class="stat-value">{{ stats.totalJournees }}</span>
+            <span class="stat-label">Total journées</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--green">
+            <span class="material-icons">people</span>
+          </div>
+          <div class="stat-body">
+            <span class="stat-value">{{ stats.conducteursActifs }}</span>
+            <span class="stat-label">Conducteurs actifs</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--blue">
+            <span class="material-icons">schedule</span>
+          </div>
+          <div class="stat-body">
+            <span class="stat-value">{{ stats.dureeMoyenne | number:'1.1-1' }} h</span>
+            <span class="stat-label">Durée moyenne</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--purple">
+            <span class="material-icons">today</span>
+          </div>
+          <div class="stat-body">
+            <span class="stat-value">{{ stats.journeesAujourdhui }}</span>
+            <span class="stat-label">Aujourd'hui</span>
+          </div>
+        </div>
+      </div>
+    }
 
     <!-- Filtres -->
     <div class="filters-card">

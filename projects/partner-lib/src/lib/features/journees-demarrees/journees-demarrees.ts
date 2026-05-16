@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { TableCardComponent } from '../../shared/table-card/table-card';
 import { ExportService } from '../../services/export.service';
-import { ConducteurService } from '../../services/conducteur.service';
+import { ConducteurService, StatsJournees } from '../../services/conducteur.service';
 import { Driver } from '../../models/conducteur.model';
 
 interface JourneeDemarree extends Driver {
@@ -26,8 +28,10 @@ export class JourneesDemarreesComponent implements OnInit {
     private exportSvc: ExportService,
   ) {}
 
-  isLoading = true;
-  errorMsg  = '';
+  isLoading    = true;
+  errorMsg     = '';
+  stats: StatsJournees | null = null;
+  statsError   = false;
 
   readonly skelRows = [1, 2, 3, 4, 5];
 
@@ -58,13 +62,20 @@ export class JourneesDemarreesComponent implements OnInit {
   }
 
   private loadData(): void {
-    this.isLoading = true;
-    this.conducteurSvc.getAll().subscribe({
-      next: (data) => {
-        this.allItems = data
+    this.isLoading  = true;
+    this.statsError = false;
+    forkJoin({
+      conducteurs: this.conducteurSvc.getAll(),
+      stats: this.conducteurSvc.getStatsJournees(this.dateDebut, this.dateFin).pipe(
+        catchError(() => { this.statsError = true; return of(null); })
+      ),
+    }).subscribe({
+      next: ({ conducteurs, stats }) => {
+        this.allItems = conducteurs
           .filter(d => d.journee === 'OUI')
           .map(d => ({ ...d, nbJournees: 1 }));
         this.filteredItems = [...this.allItems];
+        this.stats     = stats;
         this.isLoading = false;
       },
       error: () => {
@@ -77,6 +88,11 @@ export class JourneesDemarreesComponent implements OnInit {
   rechercher(): void {
     this.currentPage = 1;
     this.filteredItems = [...this.allItems];
+    this.statsError = false;
+    this.conducteurSvc.getStatsJournees(this.dateDebut, this.dateFin).subscribe({
+      next:  (s) => { this.stats = s; },
+      error: () => { this.statsError = true; },
+    });
   }
 
   exportToExcel(): void {
